@@ -1,3 +1,5 @@
 package dao
 
-type CommentDAO struct{}
+type commentDAO struct{}
+
+var CommentDAO = &commentDAO{}

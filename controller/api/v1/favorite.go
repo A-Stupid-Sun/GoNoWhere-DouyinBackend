@@ -2,10 +2,10 @@ package v1
 
 import "github.com/gin-gonic/gin"
 
-type FavoriteController struct{}
+type favoriteController struct{}
 
 // Action 点赞，即赞操作,取消或者增加
-func (f *FavoriteController) Action(c *gin.Context) {
+func (f *favoriteController) Action(c *gin.Context) {
 	//TODO 目前我想到操作数据库时，可能出现的问题就是，在并发情况下
 	// 如，请求一读到点赞数是100，然后执行 update+1，点赞数为101，刷新到数据库；
 	// 但是同时请求二也读到点赞数100，执行update+1，刷新到数据库，实际点赞数应该是102，但是结果确实101
@@ -13,6 +13,6 @@ func (f *FavoriteController) Action(c *gin.Context) {
 }
 
 // List 用户点赞列表
-func (f *FavoriteController) List(c *gin.Context) {
+func (f *favoriteController) List(c *gin.Context) {
 
 }

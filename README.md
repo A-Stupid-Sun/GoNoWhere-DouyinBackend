@@ -1,7 +1,28 @@
 ## 项目介绍
-
+精简版抖音后端服务，支持抖音核心操作，用户注册、登录视频推送、视频投稿、以及视频点赞评论以及关注和粉丝等功能
 
 ## 部署
+### 一、直接运行
+#### 1. 安装依赖
+```shell
+go mod download
+```
+#### 2. 修改配置文件
+```shell
+cd /config 
+
+code config.ini  # vscode 打开并编辑配置文件
+
+或 
+vim config.ini   # vim 打开并编辑 
+```
+#### 3. 运行
+```shell
+go run main.go
+```
+> 如果遇到依赖问题，一般会提示的,试试 go mod tidy
+### 二、Docker部署
+> 先等等吧
 
 ## 开发指南
 

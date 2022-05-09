@@ -2,10 +2,10 @@ package v1
 
 import "github.com/gin-gonic/gin"
 
-type PublishController struct{}
+type publishController struct{}
 
 // Publish 上传视频， 上传到OSS->返回视频URL->更新数据库
-func (p *PublishController) Publish(c *gin.Context) {
+func (p *publishController) Publish(c *gin.Context) {
 
 	//TODO 上传到OSS->返回视频URL->更新数据库
 	// 以上操作为原子操作，必须确保全部成功，或者全部失败
@@ -15,6 +15,6 @@ func (p *PublishController) Publish(c *gin.Context) {
 }
 
 // PublishList 用户投稿的视频列表
-func (p *PublishController) PublishList(c *gin.Context) {
+func (p *publishController) PublishList(c *gin.Context) {
 
 }
