@@ -1,3 +1,3 @@
 package dao
 
-type FavoriteDAO struct{}
+type favoriteDAO struct{}

@@ -1,3 +1,3 @@
 package dao
 
-type VideoDAO struct{}
+type videoDAO struct{}

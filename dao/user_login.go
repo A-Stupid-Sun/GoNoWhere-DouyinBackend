@@ -1,3 +1,3 @@
 package dao
 
-type UserLoginDAO struct{}
+type userLoginDAO struct{}

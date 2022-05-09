@@ -1,3 +1,3 @@
 package dao
 
-type FollowDAO struct{}
+type followDAO struct{}

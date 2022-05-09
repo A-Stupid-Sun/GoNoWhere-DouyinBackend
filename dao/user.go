@@ -1,21 +1,21 @@
 package dao
 
-type UserDAO struct{}
+type userDAO struct{}
 
 //Demo
 
-func (u *UserDAO) Create() {
+func (u *userDAO) Create() {
 	//TODO 增
 }
 
-func (u *UserDAO) Delete() {
+func (u *userDAO) Delete() {
 	//TODO 删
 }
 
-func (u *UserDAO) Update() {
+func (u *userDAO) Update() {
 	//TODO 改
 }
 
-func (u *UserDAO) Select() {
+func (u *userDAO) Select() {
 	//TODO 查
 }
