@@ -16,8 +16,6 @@ type User struct {
 	FollowCount   int64   `gorm:"type:INT;unsigned;not null;default:0" json:"follow_count"`
 	FollowerCount int64   `gorm:"type:INT;unsigned;not null;default:0" json:"follower_count"`
 	Videos        []Video `gorm:"foreignKey:AuthorID;references:UserID"`
-	//实际上 Videos 仅仅用来表示Video和User之间的关系，并且自动迁移的时候，设置关闭物理外键，就不会创建物理外键，使用逻辑外键
-	//经过实测啦
 }
 
 // UserAPI 主要提供给接口使用
@@ -34,13 +32,13 @@ type UserAPI struct {
 type UserLogin struct {
 	gorm.Model
 	Name     string `gorm:"type:varchar(34);not null;unique" json:"name" validate:"min=6,max=32"`
-	PassWord string `gorm:"type:varchar(65);not null;unique" json:"password" validate:"min=6,max=32"`
+	PassWord string `gorm:"type:varchar(65);not null" json:"password" validate:"min=6,max=32"`
 }
 
 // Video 实体
 // 发布时间要创建索引，加速按照时间访问
 type Video struct {
-	id            int64  `gorm:"type:INT;primaryKey;autoIncrement"`
+	gorm.Model
 	VideoID       int64  `gorm:"type:BIGINT;not null;UNIQUE" json:"video_id" validate:""`
 	AuthorID      int64  `gorm:"type:BIGINT;not null" json:"author_id" validate:""`
 	FavoriteCount int32  `gorm:"type:INT;not null;default:0" json:"favorite_count" validate:""`
@@ -48,37 +46,36 @@ type Video struct {
 	PlayURL       string `gorm:"type:varchar(100);not null" json:"play_url" validate:""`
 	CoverURL      string `gorm:"type:varchar(100);not null" json:"cover_url" validate:""`
 }
+
+// VideoAPI 主要提供给查询操作使用
 type VideoAPI struct {
-	Author        UserAPI
-	VideoID       int64  `json:"id"`
-	FavoriteCount int32  `json:"favorite_count"`
-	CommentCount  int32  `json:"comment_count"`
-	PlayURL       string `json:"play_url"`
-	CoverURL      string `json:"cover_url"`
-	IsFavorite    bool   `json:"is_favorite"`
+	Author        UserAPI `json:"author"`
+	VideoID       int64   `json:"id"`
+	FavoriteCount int32   `json:"favorite_count"`
+	CommentCount  int32   `json:"comment_count"`
+	PlayURL       string  `json:"play_url"`
+	CoverURL      string  `json:"cover_url"`
+	IsFavorite    bool    `json:"is_favorite"`
 }
 
 // Favorite 点赞实体
 type Favorite struct {
-	id       int64  `gorm:"type:INT;primaryKey;autoIncrement"`
-	UserID   int64  `gorm:"type:BIGINT;not null" json:"user_id" validate:""`
-	VideoID  int64  `gorm:"type:BIGINT;not null;" json:"video_id" validate:""`
-	CreateAt string `gorm:"type:timestamp;not null;default:current_timestamp()"`
+	gorm.Model
+	UserID  int64 `gorm:"type:BIGINT;not null" json:"user_id" validate:""`
+	VideoID int64 `gorm:"type:BIGINT;not null" json:"video_id" validate:""`
 }
 
 // Comments  实体
 type Comments struct {
-	id       int64  `gorm:"type:INT;primaryKey;autoIncrement"`
-	UserID   int64  `gorm:"type:BIGINT;not null;" json:"user_id" validate:""`
-	VideoID  int64  `gorm:"type:BIGINT;not null;" json:"video_id" validate:""`
-	Content  string `gorm:"type:varchar(100);not null;" json:"content"`
-	CreateAt string `gorm:"type:timestamp;not null;default:current_timestamp()"`
+	gorm.Model
+	UserID  int64  `gorm:"type:BIGINT;not null;" json:"user_id" validate:""`
+	VideoID int64  `gorm:"type:BIGINT;not null;" json:"video_id" validate:""`
+	Content string `gorm:"type:varchar(100);not null;" json:"content"`
 }
 
 // Follow 关注实体
 type Follow struct {
-	id       int64  `gorm:"type:INT;primaryKey;autoIncrement"`
-	UserID   int64  `gorm:"type:BIGINT;not null;" json:"user_id" validate:""`
-	ToUserID int64  `gorm:"type:BIGINT;not null;" json:"to_user_id" validate:""`
-	CreateAt string `gorm:"type:timestamp;not null;default:current_timestamp()"`
+	gorm.Model
+	UserID   int64 `gorm:"type:BIGINT;not null;" json:"user_id" validate:""`
+	ToUserID int64 `gorm:"type:BIGINT;not null;" json:"to_user_id" validate:""`
 }
