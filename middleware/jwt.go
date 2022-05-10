@@ -7,6 +7,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"time"
 )
 
 type JWT struct {
@@ -29,6 +30,24 @@ var (
 	TokenMalFormed   error = errors.New("token 不正确，请重新登录")
 	TokenInvalid     error = errors.New("这不是一个Token，请重新登录")
 )
+
+// SetUpToken 生成Token
+func SetUpToken(userID int64) (string, error) {
+	j := NewJWT()
+	claims := MyClaims{
+		UserID: userID,
+		StandardClaims: jwt.StandardClaims{
+			NotBefore: time.Now().Unix() - 240,
+			ExpiresAt: time.Now().Unix() + config.TokenExpiredTime,
+		},
+	}
+
+	token, err := j.CreateToken(claims)
+	if err != nil {
+		return "", errors.New("token 生成失败")
+	}
+	return token, nil
+}
 
 // CreateToken 创建token
 func (j *JWT) CreateToken(claims MyClaims) (string, error) {

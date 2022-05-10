@@ -15,7 +15,7 @@ import (
 // 创建对应数据的钩子操作，比如创建用户时，在保存密码之前执行加密操作
 
 // InitDB 显式初始化，连接数据库，表迁移等
-var Db *gorm.DB
+var db *gorm.DB
 
 func InitDB() {
 	dns := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
@@ -26,7 +26,8 @@ func InitDB() {
 		config.DbName)
 
 	fmt.Println(dns)
-	Db, err := gorm.Open(mysql.Open(dns), &gorm.Config{
+	var err error
+	db, err = gorm.Open(mysql.Open(dns), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true, //关闭外键！！！
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: false,       //默认在表的后面加s
@@ -39,11 +40,11 @@ func InitDB() {
 		log.Println("数据库连接失败,err:", err)
 	}
 
-	err = Db.AutoMigrate(&model.Video{}, &model.User{}, &model.Follow{}, &model.Comments{}, &model.Favorite{}) //TODO 数据库自动迁移
+	err = db.AutoMigrate(&model.Video{}, &model.User{}, &model.UserLogin{}, &model.Follow{}, &model.Comments{}, &model.Favorite{}) //TODO 数据库自动迁移
 	if err != nil {
 		log.Println("数据库自动迁移失败，err:", err)
 	}
-	sqlDb, _ := Db.DB()
+	sqlDb, _ := db.DB()
 
 	// TODO 这方面后期再说吧，参数到底设为多少
 	sqlDb.SetMaxIdleConns(50)                  // 连接池中的最大闲置连接数
