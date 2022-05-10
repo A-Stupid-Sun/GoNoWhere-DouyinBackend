@@ -2,6 +2,7 @@ package dao
 
 import (
 	"douyin/config"
+	"douyin/model"
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -28,8 +29,8 @@ func InitDB() {
 	Db, err := gorm.Open(mysql.Open(dns), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true, //关闭外键！！！
 		NamingStrategy: schema.NamingStrategy{
-			SingularTable: false,      //默认在表的后面加s
-			TablePrefix:   "t_douyin", // 表名前缀
+			SingularTable: false,       //默认在表的后面加s
+			TablePrefix:   "t_douyin_", // 表名前缀
 		},
 		SkipDefaultTransaction: true, // 禁用默认事务
 	})
@@ -38,8 +39,7 @@ func InitDB() {
 		log.Println("数据库连接失败,err:", err)
 	}
 
-	err = Db.AutoMigrate() //TODO 数据库自动迁移
-
+	err = Db.AutoMigrate(&model.Video{}, &model.User{}, &model.Follow{}, &model.Comments{}, &model.Favorite{}) //TODO 数据库自动迁移
 	if err != nil {
 		log.Println("数据库自动迁移失败，err:", err)
 	}

@@ -1,26 +1,36 @@
 package config
 
-import "gopkg.in/ini.v1"
+import (
+	"gopkg.in/ini.v1"
+	"log"
+	"strconv"
+)
 
 // 解析配置文件
 var (
-	AppMode    string
-	Port       string
-	JwtKey     string
-	Dbtype     string
-	DbHost     string
-	DbPort     string
-	DbUser     string
-	DbPassWord string
-	DbName     string
+	AppMode          string // 服务器启动模式默认 debug 模式
+	Port             string //服务启动端口
+	JwtKey           string //JWT 签名
+	Dbtype           string //数据库类型
+	DbHost           string //数据库服务器主机
+	DbPort           string //数据服务器端口
+	DbUser           string //数据库用户
+	DbPassWord       string //数据库密码
+	DbName           string //数据库名
+	TokenExpiredTime int64  //JWT 过期时间
 )
 
 func init() {
-
+	f, err := ini.Load("./config/config.ini")
+	if err != nil {
+		log.Fatal("配置文件初始化失败")
+	}
+	loadServer(f)
+	loadDb(f)
 }
 
-// LoadServer 加载服务器配置
-func LoadServer(file *ini.File) {
+// loadServer 加载服务器配置
+func loadServer(file *ini.File) {
 	s := file.Section("server")
 	AppMode = s.Key("AppMode").MustString("debug")
 	Port = s.Key("Port").MustString("3001")
@@ -28,8 +38,8 @@ func LoadServer(file *ini.File) {
 
 }
 
-// LoadDb 加载数据库相关配置
-func LoadDb(file *ini.File) {
+// loadDb 加载数据库相关配置
+func loadDb(file *ini.File) {
 	s := file.Section("database")
 	Dbtype = s.Key("Dbtype").MustString("mysql")
 	DbName = s.Key("DbName").MustString("test01")
@@ -37,4 +47,11 @@ func LoadDb(file *ini.File) {
 	DbHost = s.Key("DbHost").MustString("DbHost")
 	DbUser = s.Key("DbUser").MustString("root")
 	DbPassWord = s.Key("DbPassWord").MustString("root")
+}
+
+// loadJWT 加载JWT 相关配置
+func loadJWT(f *ini.File) {
+	s := f.Section("jwt")
+	JwtKey = s.Key("JwtKey").MustString("")
+	TokenExpiredTime, _ = strconv.ParseInt(s.Key("TokenExpiredTime").MustString("1000"), 10, 64)
 }

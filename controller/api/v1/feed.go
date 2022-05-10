@@ -9,7 +9,7 @@ type feedController struct{}
 
 // Feed 推送视频流到客户端，按照视频的投稿时间倒序，即由近及远
 func (*feedController) Feed(c *gin.Context) {
-	//c.Set()
+
 	data := FeedData{}
 
 	// 处理和获取数据
