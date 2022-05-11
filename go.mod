@@ -10,6 +10,7 @@ require (
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/yitter/idgenerator-go v1.2.2
 	golang.org/x/crypto v0.0.0-20220427172511-eb4f295cb31f
+	gopkg.in/errgo.v2 v2.1.0
 	gopkg.in/ini.v1 v1.66.4
 	gorm.io/driver/mysql v1.3.3
 	gorm.io/gorm v1.23.5

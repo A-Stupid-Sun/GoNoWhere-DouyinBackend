@@ -4,11 +4,12 @@ import (
 	"douyin/config"
 	"douyin/model"
 	"fmt"
+	"log"
+	"time"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
-	"log"
-	"time"
 )
 
 // 初始化数据库、数据表的迁移、设置连接池数量
@@ -25,7 +26,6 @@ func InitDB() {
 		config.DbPort,
 		config.DbName)
 
-	fmt.Println(dns)
 	var err error
 	db, err = gorm.Open(mysql.Open(dns), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true, //关闭外键！！！
@@ -46,7 +46,7 @@ func InitDB() {
 	}
 	sqlDb, _ := db.DB()
 
-	// TODO 这方面后期再说吧，参数到底设为多少
+	// TODO 这方面后期再说吧， 参数到底设为多少
 	sqlDb.SetMaxIdleConns(50)                  // 连接池中的最大闲置连接数
 	sqlDb.SetMaxOpenConns(100)                 // 数据库的最大连接数量
 	sqlDb.SetConnMaxLifetime(10 * time.Second) // 连接的最大可复用时间

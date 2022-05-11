@@ -6,10 +6,10 @@ import (
 
 type userLoginDAO struct{}
 
-func (l *userLoginDAO) Query(conditions map[string]interface{}) (*model.UserLogin, error) {
+func (l *userLoginDAO) Query(conditions map[string]interface{}, fields []string) (*model.UserLogin, error) {
 	var u model.UserLogin
 	err := db.Model(&model.UserLogin{}).
-		Select("id", "pass_word").
+		Select(fields).
 		Where(conditions).
 		First(&u).Error
 

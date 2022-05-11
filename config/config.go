@@ -1,9 +1,10 @@
 package config
 
 import (
-	"gopkg.in/ini.v1"
 	"log"
 	"strconv"
+
+	"gopkg.in/ini.v1"
 )
 
 // 解析配置文件
@@ -16,6 +17,7 @@ var (
 	DbPort           string //数据服务器端口
 	DbUser           string //数据库用户
 	DbPassWord       string //数据库密码
+	BcryptCost       int    //bcrypt 生成密码时的cost
 	DbName           string //数据库名
 	TokenExpiredTime int64  //JWT 过期时间
 )
@@ -25,8 +27,13 @@ func init() {
 	if err != nil {
 		log.Fatal("配置文件初始化失败")
 	}
+
 	loadServer(f)
 	loadDb(f)
+	BcryptCost, err = strconv.Atoi(f.Section("password").Key("bcryptCost").MustString("10"))
+	if err != nil {
+		log.Fatal("BcryptCost 加载失败")
+	}
 }
 
 // loadServer 加载服务器配置

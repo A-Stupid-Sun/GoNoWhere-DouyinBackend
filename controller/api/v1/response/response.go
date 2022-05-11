@@ -1,44 +1,41 @@
 package response
 
-import (
-	"douyin/model"
-	"time"
-)
+import "douyin/model"
 
 type Status struct {
 	Code    int    `json:"status_code"`
 	Message string `json:"status_msg"`
 }
 
-type FeedResp struct {
+type UserInfo struct {
 	Status
-	NextTime time.Time
-	Videos   []model.VideoAPI `json:"video_list"`
+	User model.UserAPI
 }
 
-type UserInfoResp struct {
-	Status
-	model.User
-}
-
-type LoginResp struct {
+type Login struct {
 	Status
 	UserID int64  `json:"user_id"`
 	Token  string `json:"token"`
 }
-type RegisterResp struct {
+type Register struct {
 	Status
 	UserID int64  `json:"user_id"`
 	Token  string `json:"token"`
 }
 
-type PublishResp struct {
-	Status
-	Videos     []model.VideoAPI
-	IsFavorite bool
-}
+//type Feed struct {
+//	Status
+//	NextTime time.Time
+//	Videos   []model.VideoAPI `json:"video_list"`
+//}
 
-type FavoriteResp struct {
-	Status
-	Videos []model.VideoAPI `json:"omitempty"`
-}
+//type Publish struct {
+//	Status
+//	Videos     []model.VideoAPI
+//	IsFavorite bool
+//}
+//
+//type Favorite struct {
+//	Status
+//	Videos []model.VideoAPI `json:"omitempty"`
+//}

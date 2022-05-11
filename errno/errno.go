@@ -26,7 +26,9 @@ var (
 	ErrVideoUpload = &Errno{Code: 10301, Message: "视频上传失败"}
 
 	// 用户相关 104 开头
-	ErrPassWordWrong = &Errno{Code: 10401, Message: "密码错误"}
+	ErrPassWordWrong       = &Errno{Code: 10401, Message: "密码错误"}
+	ErrEncryptPassWordFail = &Errno{Code: 10402, Message: "密码加密失败"}
+	ErrQueryUserNameFail   = &Errno{Code: 10403, Message: "获取用户名失败"}
 
 	// 评论相关 105 开头
 

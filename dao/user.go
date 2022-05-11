@@ -2,16 +2,13 @@ package dao
 
 import (
 	"douyin/model"
-	"fmt"
 )
 
 type userDAO struct{}
 
-//Demo
-
-func (u *userDAO) Create(values map[string]interface{}) error {
+// Create 根据 values 里面的参数 （k-v） 创建 User 实体
+func (*userDAO) Create(values map[string]interface{}) error {
 	//TODO 增
-	fmt.Println(db)
 	err := db.Model(&model.User{}).Create(values).Error
 	if err != nil {
 		return err
@@ -20,15 +17,24 @@ func (u *userDAO) Create(values map[string]interface{}) error {
 	return nil
 }
 
-func (u *userDAO) Delete() {
+func (*userDAO) Delete() {
 	//TODO 删
 }
 
-func (u *userDAO) Update() {
+func (*userDAO) Update() {
 	//TODO 改
 }
 
-func (u *userDAO) Query(conditions map[string]interface{}) (*model.User, error) {
-	//TODO 查
-	return nil, nil
+func (*userDAO) Query(conditions map[string]interface{}) (*model.User, error) {
+	var u model.User
+	err := db.Model(&model.User{}).
+		Select([]string{"user_id", "follow_count", "follower_count"}).
+		Where(conditions).
+		First(&u).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &u, nil
 }
