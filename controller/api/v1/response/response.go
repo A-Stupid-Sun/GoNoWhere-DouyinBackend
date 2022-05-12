@@ -2,6 +2,8 @@ package response
 
 import "douyin/model"
 
+// 主要定义返回的数据结构，因为返回给前端的数据并不是定义数据模型里面的那样
+
 type Status struct {
 	Code    int    `json:"status_code"`
 	Message string `json:"status_msg"`

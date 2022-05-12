@@ -34,7 +34,8 @@ func (u *userController) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
-// Register 用户注册
+// Register 用户注册，如果用户名和密码长度不符合规范，直接返回错误，不执行后续操作
+// 合法情况下，调用 service 层对应服务
 func (u *userController) Register(c *gin.Context) {
 	n := c.Query("username")
 	p := c.Query("password")
@@ -54,7 +55,7 @@ func (u *userController) Register(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
-// Info 获取用户个人信息,id,name,关注数量，粉丝数量,如果请求出错，只返回状态码和信息
+// Info 获取用户个人信息,如：id,name,关注数量，粉丝数量,如果请求出错（参数不合法、service 层出错），只返回状态码和信息
 func (u *userController) Info(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Query("user_id"), 10, 64)
 	if err != nil {
@@ -64,6 +65,7 @@ func (u *userController) Info(c *gin.Context) {
 		})
 	}
 
+	// 调用 service 层服务
 	res, err := service.UserInfo(id)
 	if err != nil {
 		c.JSON(http.StatusOK, res.Status)
