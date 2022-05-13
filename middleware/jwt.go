@@ -4,10 +4,11 @@ import (
 	"douyin/config"
 	"douyin/errno"
 	"errors"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
 )
 
 type JWT struct {
@@ -19,8 +20,9 @@ func NewJWT() *JWT {
 	return &JWT{JwtKey: []byte(config.JwtKey)}
 }
 
+// MyClaims 自定义Claim
 type MyClaims struct {
-	UserID int64
+	UserID int64 //用户ID
 	jwt.StandardClaims
 }
 
@@ -31,7 +33,7 @@ var (
 	TokenInvalid     error = errors.New("这不是一个Token，请重新登录")
 )
 
-// SetUpToken 生成Token
+// SetUpToken 设置 claims，为生成 token 制作准备 "claim"
 func SetUpToken(userID int64) (string, error) {
 	j := NewJWT()
 	claims := MyClaims{
@@ -49,12 +51,14 @@ func SetUpToken(userID int64) (string, error) {
 	return token, nil
 }
 
-// CreateToken 创建token
+// CreateToken 通过加密和claim创建token
 func (j *JWT) CreateToken(claims MyClaims) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString(j.JwtKey)
 }
 
+// ParserToken 解析token，返回定义的 Claims
+// 如果出现错误，则返回对应的错误信息
 func (j *JWT) ParserToken(tokenString string) (*MyClaims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &MyClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(j.JwtKey), nil
@@ -84,6 +88,7 @@ func (j *JWT) ParserToken(tokenString string) (*MyClaims, error) {
 	return nil, TokenInvalid
 }
 
+// JWTToken 解析、验证token，并把解析出来的user_id 通过ctx.Set() 方法增加到 gin.Context 头部中
 func JWTToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token, ok := "", false
