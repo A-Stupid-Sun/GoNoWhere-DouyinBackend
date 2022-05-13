@@ -30,27 +30,29 @@ func UserLogin(name, password string) (response.Login, error) {
 	u, err := dao.UserLoginDAO.Query(map[string]interface{}{
 		"name": name,
 	}, fields)
+
+	// 创建处理错误的匿名函数
+	handleError := func(errorType *errno.Errno) response.Login {
+		return response.Login{
+			Status: response.Status{Code: errorType.Code, Message: errorType.Message},
+		}
+	}
+
 	if err != nil {
 		log.Print(err)
-		return response.Login{}, err
+		return handleError(errno.ErrDataBase), err
 	}
 
 	//和数据库中加密的密码密文进行比较，如果密码正确 err 为空，否则给出错误
 	err = bcrypt.CompareHashAndPassword([]byte(u.PassWord), []byte(password))
 	if err != nil {
-		return response.Login{
-			Status: response.Status{Code: errno.ErrPassWordWrong.Code, Message: errno.ErrPassWordWrong.Message},
-		}, err
+		return handleError(errno.ErrPassWordWrong), err
 	}
 
 	// 为登录用户设置 token
 	token, err := middleware.SetUpToken(u.UserID)
 	if err != nil {
-		return response.Login{
-			Status: response.Status{
-				Code:    errno.ErrTokenSetUpFail.Code,
-				Message: errno.ErrTokenSetUpFail.Message,
-			}}, err
+		return handleError(errno.ErrTokenSetUpFail), err
 	}
 	// 所有处理都成功，返回对应的数据
 	return response.Login{
@@ -73,21 +75,21 @@ func Register(name, password string) (response.Register, error) {
 			"UserID": UserID,
 		})
 
+	// 处理错误
+	handleError := func(errorType *errno.Errno) response.Register {
+		return response.Register{
+			Status: response.Status{Code: errorType.Code, Message: errorType.Message},
+		}
+	}
+
 	//处理错误
 	if err != nil {
-		return response.Register{
-			Status: response.Status{
-				Code:    errno.ErrCreateUserFail.Code,
-				Message: errno.ErrCreateUserFail.Message,
-			}}, err
+		return handleError(errno.ErrCreateUserFail), err
 	}
 
 	password, err = encryptPassWord(password) //密码加密
 	if err != nil {
-		return response.Register{Status: response.Status{
-			Code:    errno.ErrEncryptPassWordFail.Code,
-			Message: errno.ErrEncryptPassWordFail.Message,
-		}}, err
+		return handleError(errno.ErrEncryptPassWordFail), err
 	}
 	// UserLogin 实体创建实例
 	err = dao.UserLoginDAO.Create(
@@ -98,18 +100,11 @@ func Register(name, password string) (response.Register, error) {
 		})
 
 	if err != nil {
-		return response.Register{Status: response.Status{
-			Code:    errno.ErrCreateUserLoginFail.Code,
-			Message: errno.ErrCreateUserLoginFail.Message,
-		}}, err
+		return handleError(errno.ErrCreateUserLoginFail), err
 	}
 	token, err := middleware.SetUpToken(UserID)
 	if err != nil {
-		return response.Register{
-			Status: response.Status{
-				Code:    errno.ErrQueryUserLoginFail.Code,
-				Message: errno.ErrQueryUserLoginFail.Message,
-			}}, err
+		return handleError(errno.ErrTokenSetUpFail), err
 	}
 
 	return response.Register{
@@ -121,24 +116,23 @@ func Register(name, password string) (response.Register, error) {
 // 包括 user_id,name,follow_count,follower_count,is_favorite
 // 最后一个应该和具体业务有关（我暂时还不太理解）
 func UserInfo(id int64) (response.UserInfo, error) {
+	// 处理错误
+	handleError := func(errorType *errno.Errno) response.UserInfo {
+		return response.UserInfo{
+			Status: response.Status{Code: errorType.Code, Message: errorType.Message},
+		}
+	}
+
 	// 获取到 user_id,follow_count,follower_count
 	u, err := dao.UserDAO.Query(map[string]interface{}{"user_id": id})
 	if err != nil {
-		return response.UserInfo{
-			Status: response.Status{
-				Code:    errno.ErrQueryUserInfoFail.Code,
-				Message: errno.ErrQueryUserInfoFail.Message,
-			}}, err
+		return handleError(errno.ErrQueryUserInfoFail), err
 	}
 
 	// 获取 user_name
 	name, err := getUserName(id)
 	if err != nil {
-		return response.UserInfo{
-			Status: response.Status{
-				Code:    errno.ErrQueryUserNameFail.Code,
-				Message: errno.ErrQueryUserNameFail.Message,
-			}}, err
+		return handleError(errno.ErrQueryUserNameFail), err
 	}
 	return response.UserInfo{
 		Status: response.Status{Code: 0, Message: "success"},
