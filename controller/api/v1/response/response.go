@@ -25,6 +25,8 @@ type Register struct {
 	Token  string `json:"token"`
 }
 
+var StatusOK = Status{Code: 0, Message: "success"}
+
 //type Feed struct {
 //	Status
 //	NextTime time.Time

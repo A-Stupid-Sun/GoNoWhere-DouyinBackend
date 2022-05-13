@@ -20,6 +20,10 @@ var (
 	BcryptCost       int    //bcrypt 生成密码时的cost
 	DbName           string //数据库名
 	TokenExpiredTime int64  //JWT 过期时间
+	QiNiuAccessKey   string //七牛accessKey
+	QiNiuSecretKey   string // 七牛SecretKey
+	QiNiuServer      string //七牛服务器
+	QiNiuBucket      string //OSS存储Bucket
 )
 
 func init() {
@@ -30,6 +34,7 @@ func init() {
 
 	loadServer(f)
 	loadDb(f)
+	loadQiNiu(f)
 	BcryptCost, err = strconv.Atoi(f.Section("password").Key("bcryptCost").MustString("10"))
 	if err != nil {
 		log.Fatal("BcryptCost 加载失败")
@@ -61,4 +66,11 @@ func loadJWT(f *ini.File) {
 	s := f.Section("jwt")
 	JwtKey = s.Key("JwtKey").MustString("")
 	TokenExpiredTime, _ = strconv.ParseInt(s.Key("TokenExpiredTime").MustString("1000"), 10, 64)
+}
+func loadQiNiu(f *ini.File) {
+	s := f.Section("qiniuOSS")
+	QiNiuAccessKey = s.Key("AccessKey").MustString(" ")
+	QiNiuSecretKey = s.Key("SecretKey").MustString(" ")
+	QiNiuServer = s.Key("Server").MustString(" ")
+	QiNiuBucket = s.Key("Bucket").MustString(" ")
 }

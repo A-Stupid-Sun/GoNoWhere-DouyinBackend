@@ -23,7 +23,8 @@ var (
 	ErrTokenSetUpFail = &Errno{Code: 10202, Message: "Token 生成失败"}
 
 	//视频相关 103 开头
-	ErrVideoUpload = &Errno{Code: 10301, Message: "视频上传失败"}
+	ErrVideoUpload           = &Errno{Code: 10301, Message: "视频上传失败"}
+	ErrCreateVideoRecordFail = &Errno{Code: 10302, Message: "数据新增视频记录失败"}
 
 	// 用户相关 104 开头
 	ErrPassWordWrong       = &Errno{Code: 10401, Message: "密码错误"}
@@ -38,6 +39,10 @@ var (
 
 	ErrValidateFail = &Errno{Code: 10701, Message: "数据验证失败"}
 
-	// 请求参数相关
+	// 请求参数相关 108 开头
 	ErrQueryPramsInvalid = &Errno{Code: 10801, Message: "请求参数不合法"}
+
+	// 上传文件相关 109 开头
+	ErrUpLoadToQiNiuFail = &Errno{Code: 10901, Message: "上传七牛云失败"}
+	ErrFileTooMuchBig    = &Errno{Code: 10902, Message: "文件太大"}
 )
