@@ -2,6 +2,7 @@ package router
 
 import (
 	v1 "douyin/controller/api/v1"
+	"douyin/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,13 +13,16 @@ func InitRouter() *gin.Engine {
 
 	// 测试
 	r.GET("/test", v1.Ping)
+	r.GET("/douyin/feed", v1.FeedController.Feed)               //视频流接口
+	r.POST("/douyin/user/register", v1.UserController.Register) //用户注册
 
-	r.GET("/douyin/feed", v1.FeedController.Feed)                   //视频流接口
-	r.POST("/douyin/user/register", v1.UserController.Register)     //用户注册
-	r.POST("/douyin/user/login", v1.UserController.Login)           //用户登录
-	r.GET("/douyin/user", v1.UserController.Info)                   //用户信息
-	r.POST("/douyin/publish/action/", v1.PublishController.Publish) //投稿接口
+	// 需要鉴权token
+	authorization := r.Group("", middleware.JWTToken())
+	{
+		authorization.POST("/douyin/publish/action/", v1.PublishController.Publish) //投稿接口
+		authorization.POST("/douyin/user/login", v1.UserController.Login)           //用户登录
+		authorization.GET("/douyin/user", v1.UserController.Info)                   //用户信息
+	}
 
 	return r
-
 }

@@ -3,8 +3,8 @@ package upload
 import (
 	"context"
 	"douyin/config"
-	"fmt"
 	"mime/multipart"
+	"strconv"
 
 	"github.com/qiniu/go-sdk/v7/auth/qbox"
 	"github.com/qiniu/go-sdk/v7/storage"
@@ -17,11 +17,11 @@ import (
 // https://developer.qiniu.com/kodo
 
 // ToQiNiu 上传文件到七牛云对象存储
-func ToQiNiu(file multipart.File, fileSize int64) (string, error) {
+func ToQiNiu(file multipart.File, fileSize, videoID int64) (string, error) {
 	putPolicy := storage.PutPolicy{
 		Scope: config.QiNiuBucket,
 	}
-	fmt.Println(config.QiNiuAccessKey, config.QiNiuSecretKey)
+
 	mac := qbox.NewMac(config.QiNiuAccessKey, config.QiNiuSecretKey)
 	upToken := putPolicy.UploadToken(mac)
 
@@ -36,7 +36,8 @@ func ToQiNiu(file multipart.File, fileSize int64) (string, error) {
 	formUploader := storage.NewFormUploader(&cfg)
 	ret := storage.PutRet{}
 
-	err := formUploader.Put(context.Background(), &ret, upToken, "hello.mp4", file, fileSize, &putExtra)
+	key := "video/" + strconv.FormatInt(videoID, 10) + ".mp4"
+	err := formUploader.Put(context.Background(), &ret, upToken, key, file, fileSize, &putExtra)
 	if err != nil {
 		return "", err
 	}

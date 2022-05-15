@@ -7,6 +7,8 @@ import (
 	"douyin/utils/upload"
 	"fmt"
 	"mime/multipart"
+
+	"github.com/yitter/idgenerator-go/idgen"
 )
 
 // PublishVideo 上传数据到七牛云对象存储,并在数据库里面更新数据
@@ -18,13 +20,21 @@ func PublishVideo(file multipart.File, header *multipart.FileHeader, userID int6
 	handleErr := func(errorType *errno.Errno) response.Status {
 		return response.Status{Code: errorType.Code, Message: errorType.Message}
 	}
-	url, err := upload.ToQiNiu(file, header.Size)
+
+	// 生成视频id
+	id := idgen.NextId() // 暂时和用户ID使用同一个id生成器
+	url, err := upload.ToQiNiu(file, header.Size, id)
 	if err != nil {
 		fmt.Println(err)
 		return handleErr(errno.ErrUpLoadToQiNiuFail), err
 	}
 	// TODO 暂未实现封面照片相关
-	err = dao.VideoDAO.Create(map[string]interface{}{"author_id": userID, "play_url": url, "cover_url": coverURL, "video_id": 4123})
+
+	err = dao.VideoDAO.Create(map[string]interface{}{
+		"author_id": userID,
+		"play_url":  url,
+		"cover_url": coverURL,
+		"video_id":  4123})
 	if err != nil {
 		return handleErr(errno.ErrCreateVideoRecordFail), err
 	}
