@@ -7,7 +7,7 @@ import (
 )
 
 type Model struct {
-	ID       int64     `gorm:"comment:自增主键"`
+	ID       uint64    `gorm:"comment:自增主键"`
 	CreateAt time.Time `gorm:"type:timestamp;not null;default:current_timestamp()"`
 	UpdateAt time.Time `gorm:"type:timestamp;not null;default:current_timestamp()"`
 	gorm.DeletedAt
@@ -16,7 +16,7 @@ type Model struct {
 // User 实体
 // 其他所有字段非空，一是业务要求，二是优化数据库性能（细节不表）
 type User struct {
-	ID       int64     `gorm:"comment:自增主键"`
+	ID       uint64    `gorm:"comment:自增主键"`
 	CreateAt time.Time `gorm:"type:timestamp;not null;default:current_timestamp()"`
 	gorm.DeletedAt
 	UserID        int64   `gorm:"type:bigint;unsigned;not null;unique;uniqueIndex:idx_user_id" json:"user_id"`
@@ -27,7 +27,7 @@ type User struct {
 
 // UserAPI 主要提供给接口使用
 type UserAPI struct {
-	ID            int64  `json:"user_id"`
+	ID            uint64 `json:"user_id"`
 	Name          string `json:"name"`
 	FollowCount   int    `json:"follow_count"`
 	FollowerCount int    `json:"follower_count"`
@@ -38,7 +38,7 @@ type UserAPI struct {
 // 我个人觉得，把密码和 name 做一个拆分，是比较好的选择，一是加密之后的密码较长，二是大部分情况下用不到密码和用户名，很多操作只需要id即可
 //
 type UserLogin struct {
-	ID       int64     `gorm:"comment:自增主键"`
+	ID       uint64    `gorm:"comment:自增主键"`
 	CreateAt time.Time `gorm:"type:timestamp;not null;default:current_timestamp()"`
 	UpdateAt time.Time `gorm:"type:timestamp;not null;default:current_timestamp()"`
 	gorm.DeletedAt
@@ -51,7 +51,7 @@ type UserLogin struct {
 // Video 实体
 // 发布时间要创建索引，加速按照时间访问
 type Video struct {
-	ID       int64     `gorm:"comment:自增主键"`
+	ID       uint64    `gorm:"comment:自增主键"`
 	CreateAt time.Time `gorm:"type:timeStamp;not null;default:current_timestamp();index:idx_create_time,sort:desc"`
 	gorm.DeletedAt
 	VideoID       int64  `gorm:"type:BIGINT;not null;UNIQUE" json:"video_id" validate:""`
@@ -75,7 +75,7 @@ type VideoAPI struct {
 
 // Favorite 点赞实体
 type Favorite struct {
-	ID       int64     `gorm:"comment:自增主键"`
+	ID       uint64    `gorm:"comment:自增主键"`
 	CreateAt time.Time `gorm:"type:timeStamp;not null;default:current_timestamp();comment:创建时间"`
 	UserID   int64     `gorm:"type:BIGINT;not nul;index:idx_user_id;comment:点赞用户ID" json:"user_id"`
 	VideoID  int64     `gorm:"type:BIGINT;not null;index:idx_video_id;comment:被点赞视频ID" json:"video_id" `

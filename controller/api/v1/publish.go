@@ -13,14 +13,15 @@ import (
 type publishController struct{}
 
 // Publish 上传视频， 上传到OSS->返回视频URL->更新数据库
+
+func handleErr(errorType *errno.Errno) response.Status {
+	return response.Status{
+		Code:    errorType.Code,
+		Message: errorType.Message,
+	}
+}
 func (p *publishController) Publish(c *gin.Context) {
 	// 提取处理错误的出公共部分
-	handleErr := func(errorType *errno.Errno) response.Status {
-		return response.Status{
-			Code:    errorType.Code,
-			Message: errorType.Message,
-		}
-	}
 
 	//TODO 上传到OSS->返回视频URL->更新数据库
 	// 以上操作为原子操作，必须确保全部成功，或者全部失败
@@ -45,12 +46,21 @@ func (p *publishController) Publish(c *gin.Context) {
 		c.JSON(http.StatusOK, handleErr(errno.ErrVideoUpload))
 		return
 	}
-
 	c.JSON(http.StatusOK, response.StatusOK) // 处理成功
-
 }
 
 // PublishList 用户投稿的视频列表
 func (p *publishController) PublishList(c *gin.Context) {
 
+	userID, err := strconv.ParseInt(c.PostForm("user_id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusOK, handleErr(errno.ErrQueryPramsInvalid))
+		return
+	}
+	res, err := service.PublishList(userID)
+	if err != nil {
+		c.JSON(http.StatusOK, handleErr(errno.ErrDataBase))
+		return
+	}
+	c.JSON(http.StatusOK, res) //处理成功
 }

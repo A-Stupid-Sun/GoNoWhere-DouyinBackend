@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"douyin/config"
-	"douyin/errno"
+	"douyin/controller/api/v1/response"
 	"errors"
 	"net/http"
 	"time"
@@ -88,14 +88,32 @@ func (j *JWT) ParserToken(tokenString string) (*MyClaims, error) {
 	return nil, TokenInvalid
 }
 
+// 提取出token,若不存在则返回空
+// 主要位解决不同请求接口 token 请求位置不同导致无法统一使用一种方法获取
+func getToken(c *gin.Context) (string, bool) {
+	var token string
+	var ok bool
+	token, ok = c.GetQuery("token")
+	// 如果Query 参数提取到 token 直接返回
+	// 否则继续从Form 参数里面提取
+	if ok {
+		return token, true
+	}
+
+	token, ok = c.GetPostForm("token")
+	if !ok {
+		return "", false
+	}
+	return token, true
+}
+
 // JWTToken 解析、验证token，并把解析出来的user_id 通过ctx.Set() 方法增加到 gin.Context 头部中
 func JWTToken() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token, ok := "", false
-		if token, ok = c.GetPostForm("token"); !ok || token == "" {
-			c.JSON(http.StatusOK, gin.H{
-				"Msg": "No Token",
-			})
+		var token string
+		var ok bool
+		if token, ok = getToken(c); !ok {
+			c.JSON(http.StatusUnauthorized, response.NoToken)
 			c.Abort()
 			return
 		}
@@ -103,22 +121,16 @@ func JWTToken() gin.HandlerFunc {
 		claims, err := j.ParserToken(token)
 		if err != nil {
 			if err == TokenExpired {
-				c.JSON(http.StatusUnauthorized, gin.H{
-					"code": errno.ErrTokenExpired.Code,
-					"msg":  errno.ErrTokenExpired.Message,
-				})
+				c.JSON(http.StatusUnauthorized, response.TokenExpired)
 				c.Abort()
 				return
 			}
 			// 其他错误
-			c.JSON(http.StatusOK, gin.H{
-				"code": errno.ErrValidateFail.Code,
-				"msg":  errno.ErrValidateFail.Message,
-			})
+			c.JSON(http.StatusOK, response.InvalidParma)
 			c.Abort()
 			return
 		}
-		c.Set("id", claims.UserID) //把解析出来的userID放进头部  方便后续逻辑处理
+		c.Set("user_id", claims.UserID) //把解析出来的userID放进头部  方便后续逻辑处理
 
 	}
 }
