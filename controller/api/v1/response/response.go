@@ -1,6 +1,9 @@
 package response
 
-import "douyin/model"
+import (
+	"douyin/errno"
+	"douyin/model"
+)
 
 // 主要定义返回的数据结构，因为返回给前端的数据并不是定义数据模型里面的那样
 
@@ -26,6 +29,9 @@ type Register struct {
 }
 
 var StatusOK = Status{Code: 0, Message: "success"}
+var NoToken = Status{Code: errno.ErrNoToken.Code, Message: errno.ErrNoToken.Message}
+var TokenExpired = Status{Code: errno.ErrTokenExpired.Code, Message: errno.ErrTokenExpired.Message}
+var InvalidParma = Status{Code: errno.ErrValidateFail.Code, Message: errno.ErrValidateFail.Message}
 
 //type Feed struct {
 //	Status
@@ -33,12 +39,11 @@ var StatusOK = Status{Code: 0, Message: "success"}
 //	Videos   []model.VideoAPI `json:"video_list"`
 //}
 
-//type Publish struct {
-//	Status
-//	Videos     []model.VideoAPI
-//	IsFavorite bool
-//}
-//
+type PublishList struct {
+	Status
+	Videos []model.VideoAPI
+}
+
 //type Favorite struct {
 //	Status
 //	Videos []model.VideoAPI `json:"omitempty"`

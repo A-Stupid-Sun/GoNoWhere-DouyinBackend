@@ -35,6 +35,7 @@ func init() {
 	loadServer(f)
 	loadDb(f)
 	loadQiNiu(f)
+	loadJWT(f)
 	BcryptCost, err = strconv.Atoi(f.Section("password").Key("bcryptCost").MustString("10"))
 	if err != nil {
 		log.Fatal("BcryptCost 加载失败")

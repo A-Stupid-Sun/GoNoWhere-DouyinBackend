@@ -21,6 +21,7 @@ var (
 
 	ErrTokenExpired   = &Errno{Code: 10201, Message: "Token 已过期"}
 	ErrTokenSetUpFail = &Errno{Code: 10202, Message: "Token 生成失败"}
+	ErrNoToken        = &Errno{Code: 10203, Message: "No Token"}
 
 	//视频相关 103 开头
 	ErrVideoUpload           = &Errno{Code: 10301, Message: "视频上传失败"}

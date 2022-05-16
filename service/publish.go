@@ -34,9 +34,19 @@ func PublishVideo(file multipart.File, header *multipart.FileHeader, userID int6
 		"author_id": userID,
 		"play_url":  url,
 		"cover_url": coverURL,
-		"video_id":  4123})
+		"video_id":  id})
 	if err != nil {
 		return handleErr(errno.ErrCreateVideoRecordFail), err
 	}
 	return response.StatusOK, nil
+}
+
+// PublishList 返回用户发布的所有的视频，包括视频的点赞数和评论数等视频相关信息
+func PublishList(userID int64) (response.PublishList, error) {
+	// 首先查询视频
+	videos, err := dao.VideoDAO.Query(
+		map[string]interface{}{"user_id": userID}, "play_url", "cover_url", "user_id")
+	// 视频的点赞数量
+	// 视频的评论数量
+	// 以及作者自己是否点赞
 }
