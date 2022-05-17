@@ -114,7 +114,7 @@ func Register(name, password string) (response.Register, error) {
 
 // UserInfo 获取用户信息
 // 包括 user_id,name,follow_count,follower_count,is_favorite
-// 最后一个应该和具体业务有关（我暂时还不太理解）
+// 最后一个字段应该和具体业务有关（我暂时还不太理解）
 func UserInfo(id int64) (response.UserInfo, error) {
 	// 处理错误
 	handleError := func(errorType *errno.Errno) response.UserInfo {

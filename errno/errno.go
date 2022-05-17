@@ -25,7 +25,8 @@ var (
 
 	//视频相关 103 开头
 	ErrVideoUpload           = &Errno{Code: 10301, Message: "视频上传失败"}
-	ErrCreateVideoRecordFail = &Errno{Code: 10302, Message: "数据新增视频记录失败"}
+	ErrCreateVideoRecordFail = &Errno{Code: 10302, Message: "数据库新增视频记录失败"}
+	ErrQueryVideosFail       = &Errno{Code: 10303, Message: "查询视频信息失败"}
 
 	// 用户相关 104 开头
 	ErrPassWordWrong       = &Errno{Code: 10401, Message: "密码错误"}

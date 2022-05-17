@@ -27,7 +27,7 @@ type User struct {
 
 // UserAPI 主要提供给接口使用
 type UserAPI struct {
-	ID            uint64 `json:"user_id"`
+	ID            int64  `json:"user_id"`
 	Name          string `json:"name"`
 	FollowCount   int    `json:"follow_count"`
 	FollowerCount int    `json:"follower_count"`
@@ -64,13 +64,13 @@ type Video struct {
 
 // VideoAPI 主要提供给查询操作使用
 type VideoAPI struct {
-	Author        User   `json:"author"`
-	VideoID       int64  `json:"id"`
-	FavoriteCount int32  `json:"favorite_count"`
-	CommentCount  int32  `json:"comment_count"`
-	PlayURL       string `json:"play_url"`
-	CoverURL      string `json:"cover_url"`
-	IsFavorite    bool   `json:"is_favorite"`
+	Author        UserAPI `json:"author"`
+	VideoID       int64   `json:"id"`
+	FavoriteCount int32   `json:"favorite_count"`
+	CommentCount  int32   `json:"comment_count"`
+	PlayURL       string  `json:"play_url"`
+	CoverURL      string  `json:"cover_url"`
+	IsFavorite    bool    `json:"is_favorite"`
 }
 
 // Favorite 点赞实体

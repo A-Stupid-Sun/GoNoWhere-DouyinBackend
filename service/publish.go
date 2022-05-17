@@ -4,6 +4,7 @@ import (
 	"douyin/controller/api/v1/response"
 	"douyin/dao"
 	"douyin/errno"
+	"douyin/model"
 	"douyin/utils/upload"
 	"fmt"
 	"mime/multipart"
@@ -43,10 +44,52 @@ func PublishVideo(file multipart.File, header *multipart.FileHeader, userID int6
 
 // PublishList 返回用户发布的所有的视频，包括视频的点赞数和评论数等视频相关信息
 func PublishList(userID int64) (response.PublishList, error) {
+	handleErr := func(errorType *errno.Errno) response.PublishList {
+		return response.PublishList{
+			Status: response.Status{
+				Code:    errorType.Code,
+				Message: errorType.Message,
+			}}
+	}
 	// 首先查询视频
 	videos, err := dao.VideoDAO.Query(
-		map[string]interface{}{"user_id": userID}, "play_url", "cover_url", "user_id")
-	// 视频的点赞数量
-	// 视频的评论数量
-	// 以及作者自己是否点赞
+		map[string]interface{}{"user_id": userID},
+		"play_url", "cover_url", "user_id")
+	if err != nil {
+		return handleErr(errno.ErrQueryVideosFail), err
+	}
+
+	v := newVideoAPIList(videos) //构造数据
+
+	for i, video := range v {
+		//查询视频作者信息;发现没必要，这不是明摆着作者就是自己吗
+		//resp, err := UserInfo(video.Author.ID)
+		//if err != nil {
+		//	return handleErr(errno.ErrQueryUserInfoFail), err
+		//}
+		//v[i].Author = resp.User //作者信息
+		// 作者自己是否点赞
+		v[i].IsFavorite = dao.FavoriteDAO.IsFavorite(video.Author.ID, video.VideoID)
+	}
+	return response.PublishList{
+		Status: response.StatusOK,
+		Videos: v,
+	}, err
+}
+
+// 构造 VideoAPI 切片
+func newVideoAPIList(videos []model.Video) []model.VideoAPI {
+	var v []model.VideoAPI
+	for _, i := range videos {
+		v = append(v, model.VideoAPI{
+			VideoID:       i.VideoID,
+			Author:        model.UserAPI{ID: i.AuthorID},
+			PlayURL:       i.PlayURL,
+			CoverURL:      i.CoverURL,
+			CommentCount:  i.CommentCount,
+			FavoriteCount: i.FavoriteCount,
+		})
+	}
+
+	return v
 }
