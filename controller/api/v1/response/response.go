@@ -3,7 +3,6 @@ package response
 import (
 	"douyin/errno"
 	"douyin/model"
-	"time"
 )
 
 // 主要定义返回的数据结构，因为返回给前端的数据并不是定义数据模型里面的那样
@@ -36,7 +35,7 @@ var InvalidParma = Status{Code: errno.ErrValidateFail.Code, Message: errno.ErrVa
 
 type Feed struct {
 	Status
-	NextTime   time.Time        `json:"next_time"`
+	NextTime   int64            `json:"next_time"`
 	VideoLists []model.VideoAPI `json:"video_list"`
 }
 

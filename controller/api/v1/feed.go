@@ -2,8 +2,8 @@ package v1
 
 import (
 	"douyin/service"
-	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -13,11 +13,7 @@ type feedController struct{}
 
 // Feed 推送视频流到客户端，按照视频的投稿时间倒序，即由近及远
 func (*feedController) Feed(c *gin.Context) {
-	latestTime, ok := c.GetQuery("latest_time")
-	if !ok {
-		latestTime = time.Now().Format("2006-01-02 15:04:05")
-	}
-	fmt.Println(latestTime)
+	latestTime := toTimeString(c.Query("latest_time"))
 	resp, err := service.Feed(latestTime)
 	if err != nil {
 		c.JSON(http.StatusOK, resp.Status)
@@ -25,4 +21,19 @@ func (*feedController) Feed(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, resp)
+}
+
+// toTimeString 时间戳转换为字符串形式的格式化时间
+// 参数为精确到秒的时间戳
+// 如果字符串为空或者发送其他错误，那么就返回当前时间的字符串格式
+func toTimeString(sec string) string {
+	if len(sec) == 0 {
+		return time.Now().Format("2006-01-02 15:04:05")
+	}
+	t, err := strconv.ParseInt(sec, 10, 64)
+	if err != nil {
+		return time.Now().Format("2006-01-02 15:04:05")
+	}
+
+	return time.Unix(t, 0).Format("2006-01-02 15:04:05")
 }

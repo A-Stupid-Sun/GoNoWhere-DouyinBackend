@@ -35,5 +35,5 @@ func Feed(latestTime string) (response.Feed, error) {
 		}
 		v[i].Author = resp.User //作者信息
 	}
-	return response.Feed{VideoLists: v, Status: response.StatusOK, NextTime: nextTime}, nil
+	return response.Feed{VideoLists: v, Status: response.StatusOK, NextTime: nextTime.Unix()}, nil
 }
