@@ -36,3 +36,33 @@ func (*favoriteDAO) IsFavorite(userID int64, videoID int64) bool {
 	}
 	return count != 0
 }
+
+// Add 增加 一条点赞记录
+func (*favoriteDAO) Add(userID, videoID int64) error {
+	f := model.Favorite{
+		UserID:  userID,
+		VideoID: videoID,
+	}
+	err := db.Model(&model.Favorite{}).
+		Create(&f).Error
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// Sub 删除一条点赞记录
+func (*favoriteDAO) Sub(userID, videoID int64) error {
+	f := model.Favorite{
+		UserID:  userID,
+		VideoID: videoID,
+	}
+	err := db.Model(&model.Favorite{}).
+		Delete(&f).Error
+
+	if err != nil {
+		return err
+	}
+	return nil
+}

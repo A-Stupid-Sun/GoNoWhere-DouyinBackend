@@ -51,3 +51,31 @@ func (*videoDAO) QueryLatest(latestTime string) ([]model.Video, error) {
 	}
 	return v, nil
 }
+
+// AddFavorite 增加 count 数量的点赞数
+// count 参数主要为了更好的扩展性
+// 使用 count 可以批量更新减少更新时带来的一些问题
+func (*videoDAO) AddFavorite(videoID int64, count int) error {
+	err := db.Model(model.Video{}).
+		Update("favorite_count", gorm.Expr("favorite_count + ?", count)).
+		Error
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// SubFavorite  减少 count 数量的点赞数
+// count 参数主要为了更好的扩展性
+// 使用 count 可以批量更新减少更新时带来的一些问题
+func (*videoDAO) SubFavorite(videoID int64, count int) error {
+	err := db.Model(model.Video{}).
+		Update("favorite_count", gorm.Expr("favorite_count + ?", count)).
+		Error
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
