@@ -53,8 +53,8 @@ func PublishList(userID int64) (response.PublishList, error) {
 	}
 	// 首先查询视频
 	videos, err := dao.VideoDAO.Query(
-		map[string]interface{}{"user_id": userID},
-		"play_url", "cover_url", "user_id")
+		map[string]interface{}{"author_id": userID},
+		"play_url", "cover_url", "favorite_count", "comment_count", "video_id")
 	if err != nil {
 		return handleErr(errno.ErrQueryVideosFail), err
 	}
@@ -62,18 +62,13 @@ func PublishList(userID int64) (response.PublishList, error) {
 	v := newVideoAPIList(videos) //构造数据
 
 	for i, video := range v {
-		//查询视频作者信息;发现没必要，这不是明摆着作者就是自己吗
-		//resp, err := UserInfo(video.Author.ID)
-		//if err != nil {
-		//	return handleErr(errno.ErrQueryUserInfoFail), err
-		//}
-		//v[i].Author = resp.User //作者信息
+
 		// 作者自己是否点赞
-		v[i].IsFavorite = dao.FavoriteDAO.IsFavorite(video.Author.ID, video.VideoID)
+		v[i].IsFavorite = dao.FavoriteDAO.IsFavorite(userID, video.VideoID)
 	}
 	return response.PublishList{
-		Status: response.StatusOK,
-		Videos: v,
+		Status:     response.StatusOK,
+		VideoLists: v,
 	}, err
 }
 
@@ -83,7 +78,6 @@ func newVideoAPIList(videos []model.Video) []model.VideoAPI {
 	for _, i := range videos {
 		v = append(v, model.VideoAPI{
 			VideoID:       i.VideoID,
-			Author:        model.UserAPI{ID: i.AuthorID},
 			PlayURL:       i.PlayURL,
 			CoverURL:      i.CoverURL,
 			CommentCount:  i.CommentCount,

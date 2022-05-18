@@ -51,8 +51,8 @@ func (p *publishController) Publish(c *gin.Context) {
 
 // PublishList 用户投稿的视频列表
 func (p *publishController) PublishList(c *gin.Context) {
-	userID, err := strconv.ParseInt(c.Keys["user_id"].(string), 10, 64)
-	if err != nil {
+	userID, ok := c.Keys["user_id"].(int64)
+	if !ok {
 		c.JSON(http.StatusOK, handleErr(errno.ErrQueryPramsInvalid))
 		return
 	}
@@ -61,5 +61,9 @@ func (p *publishController) PublishList(c *gin.Context) {
 		c.JSON(http.StatusOK, handleErr(errno.ErrDataBase))
 		return
 	}
-	c.JSON(http.StatusOK, res) //处理成功
+	c.JSON(http.StatusOK, gin.H{
+		"status_code": res.Code,
+		"status_msg":  res.Message,
+		"video_list":  res.VideoLists,
+	}) //处理成功
 }

@@ -3,6 +3,7 @@ package response
 import (
 	"douyin/errno"
 	"douyin/model"
+	"time"
 )
 
 // 主要定义返回的数据结构，因为返回给前端的数据并不是定义数据模型里面的那样
@@ -33,18 +34,18 @@ var NoToken = Status{Code: errno.ErrNoToken.Code, Message: errno.ErrNoToken.Mess
 var TokenExpired = Status{Code: errno.ErrTokenExpired.Code, Message: errno.ErrTokenExpired.Message}
 var InvalidParma = Status{Code: errno.ErrValidateFail.Code, Message: errno.ErrValidateFail.Message}
 
-//type Feed struct {
-//	Status
-//	NextTime time.Time
-//	Videos   []model.VideoAPI `json:"video_list"`
-//}
+type Feed struct {
+	Status
+	NextTime   time.Time        `json:"next_time"`
+	VideoLists []model.VideoAPI `json:"video_list"`
+}
 
 type PublishList struct {
-	Status
-	Videos []model.VideoAPI
+	Status     `json:"status"`
+	VideoLists []model.VideoAPI `json:"video_list"`
 }
 
 //type Favorite struct {
 //	Status
-//	Videos []model.VideoAPI `json:"omitempty"`
+//	VideoLists []model.VideoAPI `json:"omitempty"`
 //}
