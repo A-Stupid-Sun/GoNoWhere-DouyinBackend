@@ -12,7 +12,13 @@ import (
 
 type userController struct{}
 
-// Login 用户登录入口,参数验证，调用 service 层服务,
+// NewUserController 是 userController 的构造器
+// 返回一个 userController 的指针
+func NewUserController() *userController {
+	return &userController{}
+}
+
+// Login 用户登录入口,进行参数验证合法后，调用 service 层服务进行密码验证,
 func (u *userController) Login(c *gin.Context) {
 	n := c.Query("username")
 	p := c.Query("password")
@@ -35,7 +41,7 @@ func (u *userController) Login(c *gin.Context) {
 }
 
 // Register 用户注册，如果用户名和密码长度不符合规范，直接返回错误，不执行后续操作
-// 合法情况下，调用 service 层对应服务
+// 合法情况下，调用 service 层对应服务，新增用户
 func (u *userController) Register(c *gin.Context) {
 	n := c.Query("username")
 	p := c.Query("password")
@@ -55,7 +61,9 @@ func (u *userController) Register(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
-// Info 获取用户个人信息,如：id,name,关注数量，粉丝数量,如果请求出错（参数不合法、service 层出错），只返回状态码和信息
+// Info 获取用户个人信息,如：用户id,name,关注数量，粉丝数量,
+// 如果请求出错（参数不合法、service 层出错）
+// 只返回状态码和信息
 func (u *userController) Info(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Query("user_id"), 10, 64)
 	if err != nil {

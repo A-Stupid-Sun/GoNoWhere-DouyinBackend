@@ -10,7 +10,7 @@ import (
 // Feed 获取视频列表,latestTime 限制视频列表中的最新的视频时间
 // 也就是获取视频应该是由近及远的
 // 首先从DAO 层回去对应 的Video 的切片，之后进行 VideoAPI 的组装
-// 遍历VideoAPI 切片，查询作者信息
+// 之后遍历 VideoAPI 切片，查询作者信息(这里并没有使用数据表的联结)
 func Feed(latestTime string) (response.Feed, error) {
 	handleErr := func(errType *errno.Errno) response.Feed {
 		return response.Feed{
