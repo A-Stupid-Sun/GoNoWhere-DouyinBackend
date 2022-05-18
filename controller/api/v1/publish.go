@@ -4,9 +4,7 @@ import (
 	"douyin/controller/api/v1/response"
 	"douyin/errno"
 	"douyin/service"
-	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -30,10 +28,8 @@ func (p *publishController) Publish(c *gin.Context) {
 	// 错误案例2：视频未成功上传到OSS，返回一个不正确的url(一般是错误信息)，
 	// 数据库里面更新了不完整的视频信息，也就是url不正确，返回给客户端的时候根本没法用
 	file, fileHeader, _ := c.Request.FormFile("data")
-	userID, err := strconv.ParseInt(c.PostForm("user_id"), 10, 64)
-	fmt.Println("controller->user", userID)
-	if err != nil {
-		fmt.Println("controller->user", err)
+	userID, ok := c.Keys["user_id"].(int64)
+	if !ok {
 		c.JSON(http.StatusOK, handleErr(errno.ErrQueryPramsInvalid))
 		return
 	}
@@ -44,7 +40,7 @@ func (p *publishController) Publish(c *gin.Context) {
 		return
 	}
 
-	_, err = service.PublishVideo(file, fileHeader, userID)
+	_, err := service.PublishVideo(file, fileHeader, userID)
 	if err != nil {
 		c.JSON(http.StatusOK, handleErr(errno.ErrVideoUpload))
 		return
