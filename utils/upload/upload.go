@@ -41,7 +41,7 @@ func ToQiNiu(file multipart.File, fileSize, videoID int64) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	url := config.QiNiuServer + ret.Key
+	url := "http://" + config.QiNiuServer + "/" + ret.Key
 	return url, nil
 }
 

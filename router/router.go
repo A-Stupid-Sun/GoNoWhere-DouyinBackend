@@ -13,9 +13,9 @@ func InitRouter() *gin.Engine {
 
 	// 测试
 	r.GET("/test", v1.Ping)
-	r.GET("/douyin/feed", v1.FeedController.Feed)               //视频流接口
-	r.POST("/douyin/user/register", v1.UserController.Register) //用户注册
-	r.POST("/douyin/user/login", v1.UserController.Login)       //用户登录
+	r.GET("/douyin/feed", v1.FeedController.Feed)                //视频流接口
+	r.POST("/douyin/user/register/", v1.UserController.Register) //用户注册
+	r.POST("/douyin/user/login/", v1.UserController.Login)       //用户登录
 
 	authorization := r.Group("", middleware.JWTToken())
 	{
