@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// Feed 获取视频列表,latestTime 限制视频列表中的最近的视频时间
+// Feed 获取视频列表,latestTime 限制视频列表中的最新的视频时间
 // 也就是获取视频应该是由近及远的
 // 首先从DAO 层回去对应 的Video 的切片，之后进行 VideoAPI 的组装
 // 遍历VideoAPI 切片，查询作者信息

@@ -10,6 +10,8 @@ import (
 
 type videoDAO struct{}
 
+const kMAXVideoCount = 30
+
 // Create 新增数据
 func (*videoDAO) Create(values map[string]interface{}) error {
 	err := db.Model(&model.Video{}).Create(values).Error
@@ -41,6 +43,7 @@ func (*videoDAO) QueryLatest(latestTime string) ([]model.Video, error) {
 		Select([]string{"author_id", "play_url", "cover_url", "favorite_count", "comment_count", "create_at"}).
 		Where("create_at < ?", latestTime).
 		Find(&v).
+		Limit(kMAXVideoCount).
 		Error
 
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
