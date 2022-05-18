@@ -3,6 +3,7 @@ package upload
 import (
 	"context"
 	"douyin/config"
+	"fmt"
 	"mime/multipart"
 	"strconv"
 
@@ -47,5 +48,5 @@ func ToQiNiu(file multipart.File, fileSize, videoID int64) (string, error) {
 
 // ToAliYun 上传文件到阿里云对象存储
 func ToAliYun() {
-
+	fmt.Println("hello")
 }
