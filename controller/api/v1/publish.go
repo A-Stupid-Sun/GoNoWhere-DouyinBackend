@@ -4,6 +4,7 @@ import (
 	"douyin/controller/api/v1/response"
 	"douyin/errno"
 	"douyin/service"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -30,7 +31,9 @@ func (p *publishController) Publish(c *gin.Context) {
 	// 数据库里面更新了不完整的视频信息，也就是url不正确，返回给客户端的时候根本没法用
 	file, fileHeader, _ := c.Request.FormFile("data")
 	userID, err := strconv.ParseInt(c.PostForm("user_id"), 10, 64)
+	fmt.Println("controller->user", userID)
 	if err != nil {
+		fmt.Println("controller->user", err)
 		c.JSON(http.StatusOK, handleErr(errno.ErrQueryPramsInvalid))
 		return
 	}

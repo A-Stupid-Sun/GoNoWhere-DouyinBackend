@@ -3,7 +3,6 @@ package dao
 import (
 	"douyin/model"
 	"errors"
-	"fmt"
 	"log"
 
 	"gorm.io/gorm"
@@ -36,7 +35,6 @@ func (*videoDAO) Query(conditions map[string]interface{}, fields ...string) ([]m
 
 // QueryLatest 查询最新的若干条视频，但保证不超过 latestTime
 func (*videoDAO) QueryLatest(latestTime string) ([]model.Video, error) {
-	fmt.Println("videoDAO:", latestTime)
 	var v []model.Video
 	err := db.Model(&model.Video{}).
 		Order("create_at desc").
