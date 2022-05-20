@@ -2,11 +2,15 @@ package dao
 
 import (
 	"douyin/model"
+	"errors"
+
+	"gorm.io/gorm"
 )
 
 type favoriteDAO struct{}
 
-// QueryCountOfVideo 查询某一条视频的点赞数
+// QueryCountOfVideo 从点赞记录里面查询某一条视频的点赞数
+// 从点赞记录里面获取的记录一定是最真实的
 func (*favoriteDAO) QueryCountOfVideo(conditions map[string]interface{}) (int64, error) {
 	var count int64
 	err := db.Model(&model.Favorite{}).
@@ -65,4 +69,25 @@ func (*favoriteDAO) Sub(userID, videoID int64) error {
 		return err
 	}
 	return nil
+}
+
+// VideoListByUserID 获取某用户点赞的所有视频的ID 列表
+// 对于 favorite 实体来说，只有对应的 userID 或者 videoID 才是比较重要的，所以这里就只返回一个int64
+// 类型的切片，而不是 favorite 类型的切片
+func (*favoriteDAO) VideoListByUserID(userID int64) ([]int64, error) {
+	var f []model.Favorite
+	err := db.Model(&model.Favorite{}).
+		Select("video_id").
+		Where("user_id").
+		Find(&f).Error
+
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
+
+	var res []int64
+	for _, i := range f {
+		res = append(res, i.VideoID)
+	}
+	return res, nil
 }

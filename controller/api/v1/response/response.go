@@ -44,7 +44,7 @@ type PublishList struct {
 	VideoLists []model.VideoAPI `json:"video_list"`
 }
 
-//type Favorite struct {
-//	Status
-//	VideoLists []model.VideoAPI `json:"omitempty"`
-//}
+type FavoriteList struct {
+	Status     `json:"status"`
+	VideoLists []model.VideoAPI `json:"video_list"`
+}

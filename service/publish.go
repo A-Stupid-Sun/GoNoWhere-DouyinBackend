@@ -52,7 +52,7 @@ func PublishList(userID int64) (response.PublishList, error) {
 			}}
 	}
 	// 首先查询视频
-	videos, err := dao.VideoDAO.Query(
+	videos, err := dao.VideoDAO.QueryVideos(
 		map[string]interface{}{"author_id": userID},
 		"play_url", "cover_url", "favorite_count", "comment_count", "video_id")
 	if err != nil {
@@ -62,7 +62,6 @@ func PublishList(userID int64) (response.PublishList, error) {
 	v := newVideoAPIList(videos) //构造数据
 
 	for i, video := range v {
-
 		// 作者自己是否点赞
 		v[i].IsFavorite = dao.FavoriteDAO.IsFavorite(userID, video.VideoID)
 	}

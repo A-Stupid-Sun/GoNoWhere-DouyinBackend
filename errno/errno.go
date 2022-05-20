@@ -34,8 +34,10 @@ var (
 	// 评论相关 105 开头
 
 	// 点赞相关 106 开头
-	ErrFavoriteAddFail = &Errno{Code: 10501, Message: "点赞失败，请稍后再试"}
-	ErrFavoriteSubFail = &Errno{Code: 10502, Message: "取消点赞失败，请稍后再试"}
+	ErrFavoriteAddFail         = &Errno{Code: 10501, Message: "点赞失败，请稍后再试"}
+	ErrFavoriteSubFail         = &Errno{Code: 10502, Message: "取消点赞失败，请稍后再试"}
+	ErrFavoriteFail            = &Errno{Code: 10506, Message: "点赞操作失败，请稍后再试"}
+	ErrFavoriteVideoIDListFail = &Errno{Code: 10503, Message: "获取用户点赞视频ID列表失败"}
 	// 数据验证相关 107 开头
 
 	ErrValidateFail = &Errno{Code: 10701, Message: "数据验证失败"}

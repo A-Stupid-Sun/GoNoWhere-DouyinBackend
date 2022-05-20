@@ -21,8 +21,8 @@ func (*videoDAO) Create(values map[string]interface{}) error {
 	return err
 }
 
-// Query 根据参数中的条件查询视频
-func (*videoDAO) Query(conditions map[string]interface{}, fields ...string) ([]model.Video, error) {
+// QueryVideos 根据参数中的条件查询视频
+func (*videoDAO) QueryVideos(conditions map[string]interface{}, fields ...string) ([]model.Video, error) {
 	var v []model.Video
 	err := db.Model(&model.Video{}).
 		Select(fields).
@@ -78,4 +78,34 @@ func (*videoDAO) SubFavorite(videoID int64, count int) error {
 		return err
 	}
 	return nil
+}
+
+// QueryVideo 根据单个videoID查询单个视频信息
+// 返回一个视频的信息
+func (*videoDAO) QueryVideo(videoID int64, fields ...string) (model.Video, error) {
+	var v model.Video
+	err := db.Model(&model.Video{}).
+		Select(fields).
+		Where("video_id = ?", videoID).
+		Error
+
+	if err != nil {
+		return model.Video{}, err
+	}
+	return v, nil
+}
+
+// QueryVideosByID 通过 ID 列表批量查询视频
+func (*videoDAO) QueryVideosByID(IDList []int64, fields ...string) ([]model.Video, error) {
+	var v []model.Video
+	err := db.Model(&model.Video{}).
+		Select(fields).
+		Where("video_id IN ? ", IDList).
+		Find(&v).
+		Error
+	// 处理错误和未查询到记录的err
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
+	}
+	return v, nil
 }

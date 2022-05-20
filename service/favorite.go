@@ -57,3 +57,29 @@ func favoriteSub(userID, videoID int64) error {
 	}
 	return nil
 }
+
+// FavoriteList 返回用户的点赞 列表
+func FavoriteList(userID int64) (response.FavoriteList, error) {
+	handleErr := func(errType *errno.Errno) response.FavoriteList {
+		return response.FavoriteList{
+			Status: response.Status{Code: errType.Code, Message: errType.Message},
+		}
+	}
+	// 首先加载用户点赞的所有视频ID
+	// 根据视频ID 查询对应的视频信息和作者信息
+	// 查询 视频信息和作者信息可以并发执行
+
+	videoIDs, err := dao.FavoriteDAO.VideoListByUserID(userID)
+	if err != nil {
+		return handleErr(errno.ErrFavoriteVideoIDListFail), err
+	}
+	videos, err := dao.VideoDAO.QueryVideosByID(videoIDs, "play_url", "cover_url", "author_id", "favorite_count", "comment_count")
+
+	v := newVideoAPIList(videos)
+	for i, _ := range v {
+		resp, _ := UserInfo(videos[i].AuthorID)
+		v[i].Author = resp.User
+		v[i].IsFavorite = true
+	}
+	return response.FavoriteList{Status: response.StatusOK, VideoLists: v}, nil
+}
