@@ -40,7 +40,7 @@ func InitDB() {
 		log.Println("数据库连接失败,err:", err)
 	}
 
-	err = db.AutoMigrate(&model.Video{}, &model.User{}, &model.UserLogin{}, &model.Follow{}, &model.Comments{}, &model.Favorite{}) //TODO 数据库自动迁移
+	err = db.AutoMigrate(&model.Video{}, &model.User{}, &model.UserLogin{}, &model.Follow{}, &model.Comment{}, &model.Favorite{}) //TODO 数据库自动迁移
 	if err != nil {
 		log.Println("数据库自动迁移失败，err:", err)
 	}

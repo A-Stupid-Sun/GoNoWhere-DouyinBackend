@@ -50,10 +50,7 @@ func (*favoriteDAO) Add(userID, videoID int64) error {
 	err := db.Model(&model.Favorite{}).
 		Create(&f).Error
 
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 // Sub 删除一条点赞记录
@@ -65,10 +62,7 @@ func (*favoriteDAO) Sub(userID, videoID int64) error {
 	err := db.Model(&model.Favorite{}).
 		Delete(&f).Error
 
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 // VideoListByUserID 获取某用户点赞的所有视频的ID 列表

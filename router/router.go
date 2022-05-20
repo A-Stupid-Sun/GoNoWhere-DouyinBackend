@@ -17,13 +17,14 @@ func InitRouter() *gin.Engine {
 	r.POST("/douyin/user/register/", v1.UserController.Register) //用户注册
 	r.POST("/douyin/user/login/", v1.UserController.Login)       //用户登录
 
-	authorization := r.Group("", middleware.JWTToken())
+	// 需要鉴权token
+	auth := r.Group("", middleware.JWTToken())
 	{
-		// 需要鉴权token
-		authorization.POST("/douyin/publish/action/", v1.PublishController.Publish)  //用户投稿
-		authorization.GET("/douyin/publish/list/", v1.PublishController.PublishList) //发布列表
-		authorization.GET("/douyin/user/", v1.UserController.Info)                   //用户信息
-
+		auth.POST("/douyin/publish/action/", v1.PublishController.Publish)  //用户投稿
+		auth.GET("/douyin/publish/list/", v1.PublishController.PublishList) //发布列表
+		auth.GET("/douyin/user/", v1.UserController.Info)                   //用户信息
+		auth.POST("/douyin/favorite/action/", v1.FavoriteController.Action) //赞操作
+		auth.GET("/douyin/favorite/list/", v1.FavoriteController.List)      //点赞列表
 	}
 
 	return r

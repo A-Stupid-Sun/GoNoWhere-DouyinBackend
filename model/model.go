@@ -81,8 +81,8 @@ type Favorite struct {
 	VideoID  int64     `gorm:"type:BIGINT;not null;index:idx_video_id;comment:被点赞视频ID" json:"video_id" `
 }
 
-// Comments  实体
-type Comments struct {
+// Comment  实体
+type Comment struct {
 	ID       int64     `gorm:"comment:自增主键"`
 	CreateAt time.Time `gorm:"type:timestamp;not null;default:current_timestamp()"`
 	UpdateAt time.Time `gorm:"type:timestamp;not null;default:current_timestamp()"`
