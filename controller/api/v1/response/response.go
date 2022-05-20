@@ -39,12 +39,25 @@ type Feed struct {
 	VideoLists []model.VideoAPI `json:"video_list"`
 }
 
-type PublishList struct {
+type VideoList struct {
 	Status     `json:"status"`
 	VideoLists []model.VideoAPI `json:"video_list"`
 }
 
-type FavoriteList struct {
-	Status     `json:"status"`
-	VideoLists []model.VideoAPI `json:"video_list"`
+//type PublishList struct {
+//	Status     `json:"status"`
+//	VideoLists []model.VideoAPI `json:"video_list"`
+//}
+//
+//type FavoriteList struct {
+//	Status     `json:"status"`
+//	VideoLists []model.VideoAPI `json:"video_list"`
+//}
+
+type FavoriteList VideoList
+type PublishList VideoList
+
+type CommentList struct {
+	Status
+	CommentLists []model.CommentAPI `json:"comment_lists"`
 }

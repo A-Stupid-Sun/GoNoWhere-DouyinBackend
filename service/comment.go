@@ -34,3 +34,36 @@ func CommentDel(id int64) response.Status {
 	}
 	return response.StatusOK
 }
+
+// CommentList 返回某视频的所有的评论
+func CommentList(videoID int64) response.CommentList {
+	handleErr := func(errType *errno.Errno) response.CommentList {
+		return response.CommentList{Status: response.Status{
+			Code:    errType.Code,
+			Message: errType.Message,
+		}}
+	}
+	comments, err := dao.CommentDAO.List(videoID)
+	if err != nil {
+		return handleErr(errno.ErrQueryCommentListFail)
+	}
+	c := newCommentAPIList(comments)
+
+	return response.CommentList{Status: response.StatusOK, CommentLists: c}
+}
+
+// 构造 commentList
+func newCommentAPIList(cc []model.Comment) []model.CommentAPI {
+	var c []model.CommentAPI
+
+	for _, i := range cc {
+		resp, _ := UserInfo(i.UserID)
+		c = append(c, model.CommentAPI{
+			ID:       i.ID,
+			User:     resp.User,
+			Content:  i.Content,
+			CreateAt: i.CreateAt.String(),
+		})
+	}
+	return c
+}

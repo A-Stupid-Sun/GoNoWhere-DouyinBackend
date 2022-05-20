@@ -92,6 +92,13 @@ type Comment struct {
 	Content string `gorm:"type:varchar(100);not null;comment:评论内容" json:"content"`
 }
 
+type CommentAPI struct {
+	ID       int64
+	User     UserAPI
+	Content  string
+	CreateAt string
+}
+
 // Follow 关注实体
 type Follow struct {
 	gorm.Model

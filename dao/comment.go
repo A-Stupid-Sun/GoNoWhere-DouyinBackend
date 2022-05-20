@@ -2,6 +2,9 @@ package dao
 
 import (
 	"douyin/model"
+	"errors"
+
+	"gorm.io/gorm"
 )
 
 type commentDAO struct{}
@@ -18,4 +21,17 @@ func (*commentDAO) Add(c *model.Comment) error {
 func (*commentDAO) Delete(id int64) error {
 	err := db.Model(&model.Comment{}).Delete(&model.Comment{}, 10).Error
 	return err
+}
+
+func (*commentDAO) List(id int64) ([]model.Comment, error) {
+	var c []model.Comment
+	err := db.Model(&model.Comment{}).
+		Select([]string{"id", "content", "user_id", "create_at"}).
+		Where("id= ?", id).
+		Find(&c).Error
+
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, err
+	}
+	return c, nil
 }

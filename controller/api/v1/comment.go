@@ -24,6 +24,11 @@ func (*commentController) Action(c *gin.Context) {
 
 // List 某视频的所有评论，(按时间倒序，也就是由近到远)
 func (*commentController) List(c *gin.Context) {
+	videoID, err := strconv.ParseInt(c.Query("video_id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusOK, response.InvalidParma)
+		return
+	}
 
 }
 
