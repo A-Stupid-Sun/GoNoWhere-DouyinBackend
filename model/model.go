@@ -27,7 +27,7 @@ type User struct {
 
 // UserAPI 主要提供给接口使用
 type UserAPI struct {
-	ID            int64  `json:"user_id"`
+	ID            int64  `json:"id"`
 	Name          string `json:"name"`
 	FollowCount   int    `json:"follow_count"`
 	FollowerCount int    `json:"follower_count"`

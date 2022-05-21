@@ -57,6 +57,7 @@ func (*videoDAO) QueryLatest(latestTime string) ([]model.Video, error) {
 // 使用 count 可以批量更新减少更新时带来的一些问题
 func (*videoDAO) AddFavorite(videoID int64, count int) error {
 	err := db.Model(model.Video{}).
+		Where("video_id = ?", videoID).
 		Update("favorite_count", gorm.Expr("favorite_count + ?", count)).
 		Error
 

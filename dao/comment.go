@@ -23,15 +23,16 @@ func (*commentDAO) Delete(id int64) error {
 	return err
 }
 
-func (*commentDAO) List(id int64) ([]model.Comment, error) {
+func (*commentDAO) List(videoID int64) ([]model.Comment, error) {
 	var c []model.Comment
 	err := db.Model(&model.Comment{}).
 		Select([]string{"id", "content", "user_id", "create_at"}).
-		Where("id= ?", id).
+		Where("video_id = ?", videoID).
 		Find(&c).Error
 
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err
 	}
+
 	return c, nil
 }

@@ -22,12 +22,24 @@ func (r *relationController) Action(c *gin.Context) {
 
 // FollowList 用户的关注列表
 func (r *relationController) FollowList(c *gin.Context) {
-
+	userID, err := strconv.ParseInt(c.Query("user_id"), 10, 64)
+	resp, err := service.FollowList(userID)
+	if err != nil {
+		c.JSON(http.StatusOK, resp.Status)
+		return
+	}
+	c.JSON(http.StatusOK, resp)
 }
 
 // FollowerList 用户的粉丝列表
 func (r *relationController) FollowerList(c *gin.Context) {
-
+	userID, err := strconv.ParseInt(c.Query("user_id"), 10, 64)
+	resp, err := service.FollowerList(userID)
+	if err != nil {
+		c.JSON(http.StatusOK, resp.Status)
+		return
+	}
+	c.JSON(http.StatusOK, resp)
 }
 
 func add(c *gin.Context) {
@@ -43,5 +55,4 @@ func cancel(c *gin.Context) {
 
 	resp, _ := service.FollowCancel(&model.Follow{UserID: userID, ToUserID: toUserId})
 	c.JSON(http.StatusOK, resp)
-
 }

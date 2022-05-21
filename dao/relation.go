@@ -24,7 +24,7 @@ func (*followDAO) Delete(f *model.Follow) error {
 // 返回的是 User 的切片，包含所有满足条件的用户(只包含 field 字段)
 func (*followDAO) Query(conditions map[string]interface{}, field ...string) ([]model.Follow, error) {
 	var f []model.Follow
-	err := db.Model(&model.User{}).Where(conditions).Select(field).Find(&f).Error
+	err := db.Model(&model.Follow{}).Where(conditions).Select(field).Find(&f).Error
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err
 	}

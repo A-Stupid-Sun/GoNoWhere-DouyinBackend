@@ -29,7 +29,8 @@ func (*commentController) List(c *gin.Context) {
 		c.JSON(http.StatusOK, response.InvalidParma)
 		return
 	}
-
+	resp := service.CommentList(videoID)
+	c.JSON(http.StatusOK, resp)
 }
 
 // 只处理新增评论的操作

@@ -15,8 +15,9 @@ func handleErr(errType *errno.Errno) response.Status {
 }
 
 // FollowAdd 新增关注
+// User 数据库也要进行对应的操作
 func FollowAdd(f *model.Follow) (response.Status, error) {
-	err := dao.FollowDAO.Delete(f)
+	err := dao.FollowDAO.Create(f)
 	if err != nil {
 		return handleErr(errno.ErrAddFollowFail), err
 	}

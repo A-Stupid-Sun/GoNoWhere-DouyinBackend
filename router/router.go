@@ -20,11 +20,16 @@ func InitRouter() *gin.Engine {
 	// 需要鉴权token
 	auth := r.Group("", middleware.JWTToken())
 	{
-		auth.POST("/douyin/publish/action/", v1.PublishController.Publish)  //用户投稿
-		auth.GET("/douyin/publish/list/", v1.PublishController.PublishList) //发布列表
-		auth.GET("/douyin/user/", v1.UserController.Info)                   //用户信息
-		auth.POST("/douyin/favorite/action/", v1.FavoriteController.Action) //赞操作
-		auth.GET("/douyin/favorite/list/", v1.FavoriteController.List)      //点赞列表
+		auth.POST("/douyin/publish/action/", v1.PublishController.Publish)              //用户投稿
+		auth.GET("/douyin/publish/list/", v1.PublishController.PublishList)             //发布列表
+		auth.GET("/douyin/user/", v1.UserController.Info)                               //用户信息
+		auth.POST("/douyin/favorite/action/", v1.FavoriteController.Action)             //赞操作
+		auth.GET("/douyin/favorite/list/", v1.FavoriteController.List)                  //点赞列表
+		auth.POST("/douyin/comment/action/", v1.CommentController.Action)               //评论操作
+		auth.GET("/douyin/comment/list/", v1.CommentController.List)                    //评论列表
+		auth.POST("/douyin/relation/action/", v1.RelationController.Action)             //关注操作
+		auth.GET("/douyin/relation/follow/list/", v1.RelationController.FollowList)     //关注列表
+		auth.GET("/douyin/relation/follower/list/", v1.RelationController.FollowerList) //粉丝列表
 	}
 
 	return r

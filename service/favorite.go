@@ -73,7 +73,7 @@ func FavoriteList(userID int64) (response.FavoriteList, error) {
 	if err != nil {
 		return handleErr(errno.ErrFavoriteVideoIDListFail), err
 	}
-	videos, err := dao.VideoDAO.QueryVideosByID(videoIDs, "play_url", "cover_url", "author_id", "favorite_count", "comment_count")
+	videos, err := dao.VideoDAO.QueryVideosByID(videoIDs, "video_id", "play_url", "cover_url", "author_id", "favorite_count", "comment_count")
 
 	v := newVideoAPIList(videos)
 	for i, _ := range v {

@@ -126,7 +126,7 @@ func JWTToken() gin.HandlerFunc {
 				return
 			}
 			// 其他错误
-			c.JSON(http.StatusOK, response.InvalidParma)
+			c.JSON(http.StatusOK, response.InvalidToken)
 			c.Abort()
 			return
 		}
