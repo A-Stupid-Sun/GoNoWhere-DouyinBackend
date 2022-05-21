@@ -28,7 +28,7 @@ type Register struct {
 	Token  string `json:"token"`
 }
 
-var StatusOK = Status{Code: 0, Message: "success"}
+var OK = Status{Code: 0, Message: "success"}
 var NoToken = Status{Code: errno.ErrNoToken.Code, Message: errno.ErrNoToken.Message}
 var TokenExpired = Status{Code: errno.ErrTokenExpired.Code, Message: errno.ErrTokenExpired.Message}
 var InvalidParma = Status{Code: errno.ErrValidateFail.Code, Message: errno.ErrValidateFail.Message}
@@ -60,4 +60,9 @@ type PublishList VideoList
 type CommentList struct {
 	Status
 	CommentLists []model.CommentAPI `json:"comment_lists"`
+}
+
+type UserList struct {
+	Status
+	UserList []model.UserAPI `json:"user_list"`
 }

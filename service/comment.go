@@ -9,7 +9,7 @@ import (
 
 // CommentAdd 新增评论操作 c 里面包含了userID、videoID、content三项
 // 其他的信息，如创建时间由数据库自动生成
-// 成功返回 response.StatusOK
+// 成功返回 response.OK
 // 失败返回对应的错误信息
 func CommentAdd(c model.Comment) response.Status {
 	if err := dao.CommentDAO.Add(&c); err != nil {
@@ -19,11 +19,11 @@ func CommentAdd(c model.Comment) response.Status {
 		}
 	}
 
-	return response.StatusOK
+	return response.OK
 }
 
 // CommentDel 删除评论操作，只需要提供评论id即可
-// 成功返回 response.StatusOK
+// 成功返回 response.OK
 // 失败返回对应的错误信息
 func CommentDel(id int64) response.Status {
 	if err := dao.CommentDAO.Delete(id); err != nil {
@@ -32,7 +32,7 @@ func CommentDel(id int64) response.Status {
 			Message: errno.ErrCommentDelFail.Message,
 		}
 	}
-	return response.StatusOK
+	return response.OK
 }
 
 // CommentList 返回某视频的所有的评论
@@ -49,7 +49,7 @@ func CommentList(videoID int64) response.CommentList {
 	}
 	c := newCommentAPIList(comments)
 
-	return response.CommentList{Status: response.StatusOK, CommentLists: c}
+	return response.CommentList{Status: response.OK, CommentLists: c}
 }
 
 // 构造 commentList

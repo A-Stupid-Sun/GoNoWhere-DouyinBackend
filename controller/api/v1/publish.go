@@ -52,7 +52,7 @@ func (p *publishController) Publish(c *gin.Context) {
 		c.JSON(http.StatusOK, handleErr(errno.ErrVideoUpload))
 		return
 	}
-	c.JSON(http.StatusOK, response.StatusOK) // 处理成功
+	c.JSON(http.StatusOK, response.OK) // 处理成功
 }
 
 // PublishList 用户投稿的视频列表

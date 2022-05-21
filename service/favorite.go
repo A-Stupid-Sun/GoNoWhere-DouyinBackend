@@ -22,12 +22,12 @@ func FavoriteAction(userID, videoID int64, actionType bool) (response.Status, er
 		if err := favoriteAdd(userID, videoID); err != nil {
 			return handleErr(errno.ErrFavoriteAddFail), err
 		}
-		return response.StatusOK, nil
+		return response.OK, nil
 	}
 	if err := favoriteSub(userID, videoID); err != nil {
 		return handleErr(errno.ErrFavoriteAddFail), err
 	}
-	return response.StatusOK, nil
+	return response.OK, nil
 }
 
 // 增加点赞操作
@@ -81,5 +81,5 @@ func FavoriteList(userID int64) (response.FavoriteList, error) {
 		v[i].Author = resp.User
 		v[i].IsFavorite = true
 	}
-	return response.FavoriteList{Status: response.StatusOK, VideoLists: v}, nil
+	return response.FavoriteList{Status: response.OK, VideoLists: v}, nil
 }

@@ -39,7 +39,7 @@ func PublishVideo(file multipart.File, header *multipart.FileHeader, userID int6
 	if err != nil {
 		return handleErr(errno.ErrCreateVideoRecordFail), err
 	}
-	return response.StatusOK, nil
+	return response.OK, nil
 }
 
 // PublishList 返回用户发布的所有的视频，包括视频的点赞数和评论数等视频相关信息
@@ -66,7 +66,7 @@ func PublishList(userID int64) (response.PublishList, error) {
 		v[i].IsFavorite = dao.FavoriteDAO.IsFavorite(userID, video.VideoID)
 	}
 	return response.PublishList{
-		Status:     response.StatusOK,
+		Status:     response.OK,
 		VideoLists: v,
 	}, err
 }

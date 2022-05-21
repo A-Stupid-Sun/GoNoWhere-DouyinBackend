@@ -41,8 +41,8 @@ var (
 	ErrFavoriteSubFail         = &Errno{Code: 10602, Message: "取消点赞失败，请稍后再试"}
 	ErrFavoriteFail            = &Errno{Code: 10606, Message: "点赞操作失败，请稍后再试"}
 	ErrFavoriteVideoIDListFail = &Errno{Code: 10603, Message: "获取用户点赞视频ID列表失败"}
-	// 数据验证相关 107 开头
 
+	// 数据验证相关 107 开头
 	ErrValidateFail = &Errno{Code: 10701, Message: "数据验证失败"}
 
 	// 请求参数相关 108 开头
@@ -51,4 +51,8 @@ var (
 	// 上传文件相关 109 开头
 	ErrUpLoadToQiNiuFail = &Errno{Code: 10901, Message: "上传七牛云失败"}
 	ErrFileTooMuchBig    = &Errno{Code: 10902, Message: "文件太大"}
+
+	// 关注、粉丝相关 110 开头
+	ErrAddFollowFail    = &Errno{Code: 11001, Message: "关注失败，请稍后再试"}
+	ErrCancelFollowFail = &Errno{Code: 11002, Message: "取消关注失败，请稍后再试"}
 )
