@@ -51,8 +51,8 @@ type UserLogin struct {
 // Video 实体
 // 发布时间要创建索引，加速按照时间访问
 type Video struct {
-	ID       uint64 `gorm:"comment:自增主键"`
-	CreateAt string `gorm:"type:timeStamp;not null;default:current_timestamp();index:idx_create_time,sort:desc"`
+	ID       uint64    `gorm:"comment:自增主键"`
+	CreateAt time.Time `gorm:"type:timeStamp;not null;default:current_timestamp();index:idx_create_time,sort:desc"`
 	gorm.DeletedAt
 	VideoID       int64  `gorm:"type:BIGINT;not null;UNIQUE" json:"video_id" validate:""`
 	AuthorID      int64  `gorm:"type:BIGINT;not null;index:idx_author_id" json:"author_id" validate:""`

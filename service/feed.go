@@ -4,8 +4,16 @@ import (
 	"douyin/controller/api/v1/response"
 	"douyin/dao"
 	"douyin/errno"
+	"douyin/model"
 	"time"
 )
+
+func getNextTime(v []model.Video) int64 {
+	if len(v) == 0 {
+		return time.Now().UnixMilli()
+	}
+	return v[len(v)-1].CreateAt.UnixMilli()
+}
 
 // Feed 获取视频列表,latestTime 限制视频列表中的最新的视频时间
 // 也就是获取视频应该是由近及远的
@@ -22,7 +30,8 @@ func Feed(latestTime string) (response.Feed, error) {
 	}
 
 	videos, err := dao.VideoDAO.QueryLatest(latestTime)
-	nextTime, err := time.Parse(time.RFC3339, videos[len(videos)-1].CreateAt)
+	//nextTime, err := time.Parse(time.RFC3339, videos[len(videos)-1].CreateAt)
+	nextTime := getNextTime(videos)
 	if err != nil {
 		return handleErr(errno.ErrQueryVideosFail), err
 	}
@@ -35,5 +44,5 @@ func Feed(latestTime string) (response.Feed, error) {
 		}
 		v[i].Author = resp.User //作者信息
 	}
-	return response.Feed{VideoLists: v, Status: response.OK, NextTime: nextTime.Unix()}, nil
+	return response.Feed{VideoLists: v, Status: response.OK, NextTime: nextTime}, nil
 }
