@@ -35,7 +35,12 @@ func (*commentController) List(c *gin.Context) {
 
 // 只处理新增评论的操作
 func actionAdd(c *gin.Context) {
-	userID, err := strconv.ParseInt(c.Query("user_id"), 10, 64)
+	//userID, err := strconv.ParseInt(c.Query("user_id"), 10, 64) 与app里面的接口不符
+	userID, ok := c.Keys["user_id"].(int64)
+	if !ok {
+		c.JSON(http.StatusOK, response.InvalidParma)
+		return
+	}
 	videoID, err := strconv.ParseInt(c.Query("video_id"), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusOK, response.InvalidParma)

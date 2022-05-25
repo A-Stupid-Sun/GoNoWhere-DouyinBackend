@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"douyin/controller/api/v1/response"
 	"douyin/service"
 	"net/http"
 	"strconv"
@@ -21,7 +22,12 @@ func NewFeedController() *feedController {
 // 首先根据参数获取视频列表最新时间阈值，如果此值为空则默认使用当前时间
 func (*feedController) Feed(c *gin.Context) {
 	latestTime := toTimeString(c.Query("latest_time"))
-	resp, err := service.Feed(latestTime)
+	userID, ok := c.Keys["user_id"].(int64)
+	if !ok {
+		c.JSON(http.StatusOK, response.InvalidParma)
+		return
+	}
+	resp, err := service.Feed(latestTime, userID)
 	if err != nil {
 		c.JSON(http.StatusOK, resp.Status)
 		return

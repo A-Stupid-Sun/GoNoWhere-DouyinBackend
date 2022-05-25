@@ -19,7 +19,7 @@ func getNextTime(v []model.Video) int64 {
 // 也就是获取视频应该是由近及远的
 // 首先从DAO 层回去对应 的Video 的切片，之后进行 VideoAPI 的组装
 // 之后遍历 VideoAPI 切片，查询作者信息(这里并没有使用数据表的联结)
-func Feed(latestTime string) (response.Feed, error) {
+func Feed(latestTime string, userID int64) (response.Feed, error) {
 	handleErr := func(errType *errno.Errno) response.Feed {
 		return response.Feed{
 			Status: response.Status{
@@ -43,6 +43,7 @@ func Feed(latestTime string) (response.Feed, error) {
 			return handleErr(errno.ErrQueryUserInfoFail), err
 		}
 		v[i].Author = resp.User //作者信息
+		v[i].IsFavorite = dao.FavoriteDAO.IsFavorite(userID, v[i].VideoID)
 	}
 	return response.Feed{VideoLists: v, Status: response.OK, NextTime: nextTime}, nil
 }
