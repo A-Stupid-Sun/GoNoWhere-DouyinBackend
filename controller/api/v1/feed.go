@@ -24,11 +24,12 @@ func NewFeedController() *feedController {
 func (*feedController) Feed(c *gin.Context) {
 	latestTime := toTimeString(c.Query("latest_time"))
 	userID, ok := c.Keys["user_id"].(int64)
-	log.Print("controller->feed", latestTime, userID)
+	log.Print("controller->feed: ", latestTime, userID)
 	if !ok {
 		c.JSON(http.StatusOK, response.InvalidParma)
 		return
 	}
+
 	resp, err := service.Feed(latestTime, userID)
 	if err != nil {
 		c.JSON(http.StatusOK, resp.Status)
