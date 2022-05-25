@@ -40,7 +40,7 @@ func (*videoDAO) QueryLatest(latestTime string) ([]model.Video, error) {
 	var v []model.Video
 	err := db.Model(&model.Video{}).
 		Order("create_at desc").
-		Select([]string{"author_id", "play_url", "cover_url", "favorite_count", "comment_count", "create_at"}).
+		Select([]string{"author_id", "play_url", "cover_url", "favorite_count", "comment_count", "create_at", "video_id"}).
 		Where("create_at < ?", latestTime).
 		Find(&v).
 		Limit(kMAXVideoCount).
