@@ -18,7 +18,11 @@ func (f *favoriteController) Action(c *gin.Context) {
 	// 如，请求一读到点赞数是100，然后执行 update+1，点赞数为101，刷新到数据库；
 	// 但是同时请求二也读到点赞数100，执行update+1，刷新到数据库，实际点赞数应该是102，但是结果确实101
 	// 其实就是并发情况下的资源竞态问题，加锁即可（但是性能影响极大，300个并发请求就会导致大部分请求 4000多ms的延迟）
-	userID, err := strconv.ParseInt(c.Query("user_id"), 10, 64)
+	userID, ok := c.Keys["user_id"].(int64)
+	if !ok {
+		c.JSON(http.StatusOK, response.InvalidParma)
+		return
+	}
 	videoID, err := strconv.ParseInt(c.Query("video_id"), 10, 64)
 	var actionType bool = true
 	if c.Query("action_type") == "2" {
@@ -37,8 +41,9 @@ func (f *favoriteController) Action(c *gin.Context) {
 
 // List 用户点赞列表
 func (f *favoriteController) List(c *gin.Context) {
-	userID, err := strconv.ParseInt(c.Query("user_id"), 10, 64)
-	if err != nil {
+	//userID, err := strconv.ParseInt(c.Query("user_id"), 10, 64)
+	userID, ok := c.Keys["user_id"].(int64)
+	if !ok {
 		c.JSON(http.StatusOK, response.InvalidParma)
 		return
 	}
