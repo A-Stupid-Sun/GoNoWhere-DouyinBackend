@@ -72,6 +72,7 @@ func (*videoDAO) AddFavorite(videoID int64, count int) error {
 // 使用 count 可以批量更新减少更新时带来的一些问题
 func (*videoDAO) SubFavorite(videoID int64, count int) error {
 	err := db.Model(model.Video{}).
+		Where("video_id = ? ", videoID).
 		Update("favorite_count", gorm.Expr("favorite_count + ?", count)).
 		Error
 
@@ -109,4 +110,24 @@ func (*videoDAO) QueryVideosByID(IDList []int64, fields ...string) ([]model.Vide
 		return nil, err
 	}
 	return v, nil
+}
+
+// AddComment 增加评论数量
+func (*videoDAO) AddComment(videoID int64, count int) error {
+	err := db.Model(&model.Video{}).
+		Where("video_id = ? ", videoID).
+		Update("comment_count", gorm.Expr("comment_count + ?", count)).
+		Error
+
+	return err
+}
+
+// SubComment 减少评论数量
+func (*videoDAO) SubComment(videoID int64, count int) error {
+	err := db.Model(&model.Video{}).
+		Where("video_id = ? ", videoID).
+		Update("comment_count", gorm.Expr("comment_count - ?", count)).
+		Error
+
+	return err
 }

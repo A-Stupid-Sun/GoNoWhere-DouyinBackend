@@ -19,6 +19,13 @@ func CommentAdd(c model.Comment) response.Status {
 		}
 	}
 
+	if err := dao.VideoDAO.AddComment(c.VideoID, 1); err != nil {
+		return response.Status{
+			Code:    errno.ErrCommentAddFail.Code,
+			Message: errno.ErrCommentAddFail.Message,
+		}
+	}
+
 	return response.OK
 }
 
@@ -32,6 +39,13 @@ func CommentDel(id int64) response.Status {
 			Message: errno.ErrCommentDelFail.Message,
 		}
 	}
+	if err := dao.VideoDAO.SubComment(id, 1); err != nil {
+		return response.Status{
+			Code:    errno.ErrCommentDelFail.Code,
+			Message: errno.ErrCommentDelFail.Message,
+		}
+	}
+
 	return response.OK
 }
 
