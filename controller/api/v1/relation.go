@@ -3,6 +3,7 @@ package v1
 import (
 	"douyin/model"
 	"douyin/service"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -45,6 +46,7 @@ func (r *relationController) FollowerList(c *gin.Context) {
 func add(c *gin.Context) {
 	userID, _ := strconv.ParseInt(c.Query("user_id"), 10, 64)
 	toUserId, _ := strconv.ParseInt(c.Query("to_user_id"), 10, 64)
+	fmt.Println("controller->follow->add", userID, toUserId)
 	resp, _ := service.FollowAdd(&model.Follow{UserID: userID, ToUserID: toUserId})
 	c.JSON(http.StatusOK, resp)
 }
