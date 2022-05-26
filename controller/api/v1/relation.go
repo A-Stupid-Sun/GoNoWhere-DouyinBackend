@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"douyin/controller/api/v1/response"
 	"douyin/model"
 	"douyin/service"
 	"fmt"
@@ -44,7 +45,12 @@ func (r *relationController) FollowerList(c *gin.Context) {
 }
 
 func add(c *gin.Context) {
-	userID, _ := strconv.ParseInt(c.Query("user_id"), 10, 64)
+	//userID, _ := strconv.ParseInt(c.Query("user_id"), 10, 64)
+	userID, ok := c.Keys["user_id"].(int64)
+	if !ok {
+		c.JSON(http.StatusOK, response.InvalidParma)
+		return
+	}
 	toUserId, _ := strconv.ParseInt(c.Query("to_user_id"), 10, 64)
 	fmt.Println("controller->follow->add", userID, toUserId)
 	resp, _ := service.FollowAdd(&model.Follow{UserID: userID, ToUserID: toUserId})
@@ -52,7 +58,12 @@ func add(c *gin.Context) {
 }
 
 func cancel(c *gin.Context) {
-	userID, _ := strconv.ParseInt(c.Query("user_id"), 10, 64)
+	//userID, _ := strconv.ParseInt(c.Query("user_id"), 10, 64)
+	userID, ok := c.Keys["user_id"].(int64)
+	if !ok {
+		c.JSON(http.StatusOK, response.InvalidParma)
+		return
+	}
 	toUserId, _ := strconv.ParseInt(c.Query("to_user_id"), 10, 64)
 
 	resp, _ := service.FollowCancel(&model.Follow{UserID: userID, ToUserID: toUserId})
