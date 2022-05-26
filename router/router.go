@@ -20,7 +20,7 @@ func InitRouter() *gin.Engine {
 	auth := r.Group("", middleware.JWTToken())
 	{
 		// 需要鉴权token
-		r.GET("/douyin/feed/", v1.FeedController.Feed)                                  //视频流接口 token 可有可无
+		auth.GET("/douyin/feed/", v1.FeedController.Feed)                               //视频流接口 token 可有可无
 		auth.POST("/douyin/publish/action/", v1.PublishController.Publish)              //用户投稿
 		auth.GET("/douyin/publish/list/", v1.PublishController.PublishList)             //发布列表
 		auth.GET("/douyin/user/", v1.UserController.Info)                               //用户信息

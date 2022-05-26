@@ -4,7 +4,7 @@ import (
 	"douyin/config"
 	"douyin/controller/api/v1/response"
 	"errors"
-	"log"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -118,6 +118,7 @@ func JWTToken() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+		fmt.Println("middleware->jwt:121")
 		j := NewJWT()
 		claims, err := j.ParserToken(token)
 		if err != nil {
@@ -131,7 +132,7 @@ func JWTToken() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		log.Print("middleware->", claims.UserID)
+		fmt.Println("middleware->jwt: ", claims.UserID)
 		c.Set("user_id", claims.UserID) //把解析出来的userID放进头部  方便后续逻辑处理
 	}
 }
