@@ -44,6 +44,7 @@ func Feed(latestTime string, userID int64) (response.Feed, error) {
 		}
 		v[i].Author = resp.User //作者信息
 		v[i].IsFavorite = dao.FavoriteDAO.IsFavorite(userID, v[i].VideoID)
+		v[i].Author.IsFollow = dao.FollowDAO.IsFollow(userID, videos[i].AuthorID)
 	}
 	return response.Feed{VideoLists: v, Status: response.OK, NextTime: nextTime}, nil
 }
