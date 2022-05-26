@@ -62,7 +62,7 @@ func newCommentAPIList(cc []model.Comment) []model.CommentAPI {
 			ID:       i.ID,
 			User:     resp.User,
 			Content:  i.Content,
-			CreateAt: i.CreateAt.String(),
+			CreateAt: i.CreateAt.Format("01-02 15:04:05"),
 		})
 	}
 	return c

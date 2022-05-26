@@ -93,10 +93,10 @@ type Comment struct {
 }
 
 type CommentAPI struct {
-	ID       int64
-	User     UserAPI
-	Content  string
-	CreateAt string
+	ID       int64   `json:"id"`
+	User     UserAPI `json:"user"`
+	Content  string  `json:"content"`
+	CreateAt string  `json:"create_date"`
 }
 
 // Follow 关注实体
