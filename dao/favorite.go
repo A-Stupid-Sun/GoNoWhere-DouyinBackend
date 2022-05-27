@@ -9,9 +9,9 @@ import (
 
 type favoriteDAO struct{}
 
-// QueryCountOfVideo 从点赞记录里面查询某一条视频的点赞数
+// QueryCountOfFavorite 从点赞记录里面查询某一条视频的点赞数
 // 从点赞记录里面获取的记录一定是最真实的
-func (*favoriteDAO) QueryCountOfVideo(conditions map[string]interface{}) (int64, error) {
+func (*favoriteDAO) QueryCountOfFavorite(conditions map[string]interface{}) (int64, error) {
 	var count int64
 	err := db.Model(&model.Favorite{}).
 		Select("id").
@@ -47,10 +47,8 @@ func (*favoriteDAO) Add(userID, videoID int64) error {
 		UserID:  userID,
 		VideoID: videoID,
 	}
-	err := db.Model(&model.Favorite{}).
-		Create(&f).Error
+	return db.Model(&model.Favorite{}).Create(&f).Error
 
-	return err
 }
 
 // Sub 删除一条点赞记录
@@ -59,22 +57,20 @@ func (*favoriteDAO) Sub(userID, videoID int64) error {
 		UserID:  userID,
 		VideoID: videoID,
 	}
-	err := db.Model(&model.Favorite{}).
-		Delete(&f).Error
-
-	return err
+	return db.Model(&model.Favorite{}).Delete(&f).Error
 }
 
-// VideoListByUserID 获取某用户点赞的所有视频的ID 列表
+// FavoriteListByUserID 获取某用户点赞的所有视频的 ID 列表
 // 对于 favorite 实体来说，只有对应的 userID 或者 videoID 才是比较重要的，所以这里就只返回一个int64
 // 类型的切片，而不是 favorite 类型的切片
-func (*favoriteDAO) VideoListByUserID(userID int64) ([]int64, error) {
+func (*favoriteDAO) FavoriteListByUserID(userID int64) ([]int64, error) {
 	var f []model.Favorite
 	err := db.Model(&model.Favorite{}).
 		Select("video_id").
 		Where("user_id").
 		Find(&f).Error
 
+	// 除了判断err不为空，也要处理 RecordNotFound 问题
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}

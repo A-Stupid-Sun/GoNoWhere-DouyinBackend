@@ -69,11 +69,11 @@ func FavoriteList(userID int64) (response.FavoriteList, error) {
 	// 根据视频ID 查询对应的视频信息和作者信息
 	// 查询 视频信息和作者信息可以并发执行
 
-	videoIDs, err := dao.FavoriteDAO.VideoListByUserID(userID)
+	videoIDs, err := dao.FavoriteDAO.FavoriteListByUserID(userID)
 	if err != nil {
 		return handleErr(errno.ErrFavoriteVideoIDListFail), err
 	}
-	videos, err := dao.VideoDAO.QueryVideosByID(videoIDs, "video_id", "play_url", "cover_url", "author_id", "favorite_count", "comment_count")
+	videos, _ := dao.VideoDAO.QueryVideosByID(videoIDs, "video_id", "play_url", "cover_url", "author_id", "favorite_count", "comment_count")
 
 	v := newVideoAPIList(videos)
 	for i, _ := range v {
