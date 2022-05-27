@@ -34,7 +34,7 @@ go run main.go
 # 服务器IP
 mysql 8.0版本
 
-host: 47.96.30.253:3306
+host: xx.xx.xx.xxx:3306
 # 数据库账号密码
 username: test01  password: Douyintest01.
 username: test02  password: Douyintest02.
