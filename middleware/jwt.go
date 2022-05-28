@@ -4,6 +4,7 @@ import (
 	"douyin/config"
 	"douyin/controller/api/v1/response"
 	"errors"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -30,7 +31,7 @@ var (
 	TokenExpired     error = errors.New("token 已过期，请重新登录")
 	TokenNotValidYet error = errors.New("token 无效，请重新登录")
 	TokenMalFormed   error = errors.New("token 不正确，请重新登录")
-	TokenInvalid     error = errors.New("这不是一个Token，请重新登录")
+	TokenInvalid     error = errors.New("这不是一个 token，请重新登录")
 )
 
 // SetUpToken 设置 claims，为生成 token 制作准备 "claim"
@@ -117,6 +118,7 @@ func JWTToken() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+		fmt.Println("middleware->jwt:121")
 		j := NewJWT()
 		claims, err := j.ParserToken(token)
 		if err != nil {
@@ -126,10 +128,11 @@ func JWTToken() gin.HandlerFunc {
 				return
 			}
 			// 其他错误
-			c.JSON(http.StatusOK, response.InvalidParma)
+			c.JSON(http.StatusOK, response.InvalidToken)
 			c.Abort()
 			return
 		}
+		fmt.Println("middleware->jwt: ", claims.UserID)
 		c.Set("user_id", claims.UserID) //把解析出来的userID放进头部  方便后续逻辑处理
 	}
 }

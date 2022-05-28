@@ -39,7 +39,7 @@ func PublishVideo(file multipart.File, header *multipart.FileHeader, userID int6
 	if err != nil {
 		return handleErr(errno.ErrCreateVideoRecordFail), err
 	}
-	return response.StatusOK, nil
+	return response.OK, nil
 }
 
 // PublishList 返回用户发布的所有的视频，包括视频的点赞数和评论数等视频相关信息
@@ -52,7 +52,7 @@ func PublishList(userID int64) (response.PublishList, error) {
 			}}
 	}
 	// 首先查询视频
-	videos, err := dao.VideoDAO.Query(
+	videos, err := dao.VideoDAO.QueryVideos(
 		map[string]interface{}{"author_id": userID},
 		"play_url", "cover_url", "favorite_count", "comment_count", "video_id")
 	if err != nil {
@@ -62,12 +62,11 @@ func PublishList(userID int64) (response.PublishList, error) {
 	v := newVideoAPIList(videos) //构造数据
 
 	for i, video := range v {
-
 		// 作者自己是否点赞
 		v[i].IsFavorite = dao.FavoriteDAO.IsFavorite(userID, video.VideoID)
 	}
 	return response.PublishList{
-		Status:     response.StatusOK,
+		Status:     response.OK,
 		VideoLists: v,
 	}, err
 }

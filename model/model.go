@@ -27,7 +27,7 @@ type User struct {
 
 // UserAPI 主要提供给接口使用
 type UserAPI struct {
-	ID            int64  `json:"user_id"`
+	ID            int64  `json:"id"`
 	Name          string `json:"name"`
 	FollowCount   int    `json:"follow_count"`
 	FollowerCount int    `json:"follower_count"`
@@ -51,8 +51,8 @@ type UserLogin struct {
 // Video 实体
 // 发布时间要创建索引，加速按照时间访问
 type Video struct {
-	ID       uint64 `gorm:"comment:自增主键"`
-	CreateAt string `gorm:"type:timeStamp;not null;default:current_timestamp();index:idx_create_time,sort:desc"`
+	ID       uint64    `gorm:"comment:自增主键"`
+	CreateAt time.Time `gorm:"type:timeStamp;not null;default:current_timestamp();index:idx_create_time,sort:desc"`
 	gorm.DeletedAt
 	VideoID       int64  `gorm:"type:BIGINT;not null;UNIQUE" json:"video_id" validate:""`
 	AuthorID      int64  `gorm:"type:BIGINT;not null;index:idx_author_id" json:"author_id" validate:""`
@@ -81,8 +81,8 @@ type Favorite struct {
 	VideoID  int64     `gorm:"type:BIGINT;not null;index:idx_video_id;comment:被点赞视频ID" json:"video_id" `
 }
 
-// Comments  实体
-type Comments struct {
+// Comment  实体
+type Comment struct {
 	ID       int64     `gorm:"comment:自增主键"`
 	CreateAt time.Time `gorm:"type:timestamp;not null;default:current_timestamp()"`
 	UpdateAt time.Time `gorm:"type:timestamp;not null;default:current_timestamp()"`
@@ -90,6 +90,13 @@ type Comments struct {
 	UserID  int64  `gorm:"type:BIGINT;not null;评论用户ID" json:"user_id"`
 	VideoID int64  `gorm:"type:BIGINT;not null;index:idx_video_id;comment:被评论视频ID" json:"video_id" validate:""`
 	Content string `gorm:"type:varchar(100);not null;comment:评论内容" json:"content"`
+}
+
+type CommentAPI struct {
+	ID       int64   `json:"id"`
+	User     UserAPI `json:"user"`
+	Content  string  `json:"content"`
+	CreateAt string  `json:"create_date"`
 }
 
 // Follow 关注实体

@@ -57,7 +57,7 @@ func loadDb(file *ini.File) {
 	Dbtype = s.Key("Dbtype").MustString("mysql")
 	DbName = s.Key("DbName").MustString("test01")
 	DbPort = s.Key("DbPort").MustString("DbPort")
-	DbHost = s.Key("DbHost").MustString("DbHost")
+	DbHost = s.Key("DbHost").MustString("localhost")
 	DbUser = s.Key("DbUser").MustString("root")
 	DbPassWord = s.Key("DbPassWord").MustString("root")
 }

@@ -11,14 +11,21 @@ import (
 
 type publishController struct{}
 
-// Publish 上传视频， 上传到OSS->返回视频URL->更新数据库
+// NewPublishController  是 publishController的构造器
+// 返回一个 publishController 类型的指针
+func NewPublishController() *publishController {
+	return &publishController{}
+}
 
+// handleErr 抽象出通用的处理错误的操作
 func handleErr(errorType *errno.Errno) response.Status {
 	return response.Status{
 		Code:    errorType.Code,
 		Message: errorType.Message,
 	}
 }
+
+// Publish 上传视频， 上传到OSS->OSS服务返回视频URL->更新数据库
 func (p *publishController) Publish(c *gin.Context) {
 	// 提取处理错误的出公共部分
 
@@ -45,7 +52,7 @@ func (p *publishController) Publish(c *gin.Context) {
 		c.JSON(http.StatusOK, handleErr(errno.ErrVideoUpload))
 		return
 	}
-	c.JSON(http.StatusOK, response.StatusOK) // 处理成功
+	c.JSON(http.StatusOK, response.OK) // 处理成功
 }
 
 // PublishList 用户投稿的视频列表

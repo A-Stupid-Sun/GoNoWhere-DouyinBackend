@@ -28,9 +28,10 @@ type Register struct {
 	Token  string `json:"token"`
 }
 
-var StatusOK = Status{Code: 0, Message: "success"}
+var OK = Status{Code: 0, Message: "success"}
 var NoToken = Status{Code: errno.ErrNoToken.Code, Message: errno.ErrNoToken.Message}
 var TokenExpired = Status{Code: errno.ErrTokenExpired.Code, Message: errno.ErrTokenExpired.Message}
+var InvalidToken = Status{Code: errno.ErrTokenInvalid.Code, Message: errno.ErrTokenInvalid.Message}
 var InvalidParma = Status{Code: errno.ErrValidateFail.Code, Message: errno.ErrValidateFail.Message}
 
 type Feed struct {
@@ -39,12 +40,30 @@ type Feed struct {
 	VideoLists []model.VideoAPI `json:"video_list"`
 }
 
-type PublishList struct {
-	Status     `json:"status"`
+type VideoList struct {
+	Status
 	VideoLists []model.VideoAPI `json:"video_list"`
 }
 
-//type Favorite struct {
-//	Status
-//	VideoLists []model.VideoAPI `json:"omitempty"`
+//type PublishList struct {
+//	Status     `json:"status"`
+//	VideoLists []model.VideoAPI `json:"video_list"`
 //}
+//
+//type FavoriteList struct {
+//	Status     `json:"status"`
+//	VideoLists []model.VideoAPI `json:"video_list"`
+//}
+
+type FavoriteList VideoList
+type PublishList VideoList
+
+type CommentList struct {
+	Status
+	CommentLists []model.CommentAPI `json:"comment_list"`
+}
+
+type UserList struct {
+	Status
+	UserList []model.UserAPI `json:"user_list"`
+}
